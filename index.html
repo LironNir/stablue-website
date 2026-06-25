@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stablue — הדרך שלך לחזור לאיזון</title>
+  <meta name="description" content="אפליקציה בעברית לחרדה ולחץ. פרוטוקול הרגעה, שיחת AI, יומן מוצפן ומסך תמיכה." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #080C2C;
+      --blue:   #2448D8;
+      --teal:   #38E8CF;
+      --card:   rgba(14,18,60,.78);
+      --bdr:    rgba(60,90,220,.22);
+      --text:   #FFFFFF;
+      --muted:  rgba(185,195,255,.6);
+      --faint:  rgba(120,140,220,.44);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--bg); color: var(--text);
+      direction: rtl; text-align: right;
+      overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+    /* App gradient: #2A0860 → #120850 → #071060 → #050D40 */
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 1000px 700px at 55% -5%,  rgba(42,8,96,.55),   transparent 50%),
+        radial-gradient(ellipse 800px 620px at -6% 80%,   rgba(7,16,96,.38),   transparent 55%),
+        radial-gradient(ellipse 650px 500px at 108% 52%,  rgba(18,8,80,.28),   transparent 58%),
+        linear-gradient(170deg, #120838 0%, #0A0C38 42%, #070C30 74%, #050D28 100%);
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(50,80,220,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(50,80,220,.018) 1px, transparent 1px);
+      background-size: 90px 90px;
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      height: 64px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(8,4,28,.9); backdrop-filter: blur(28px);
+      border-bottom: 1px solid rgba(130,80,255,.12);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .nav-logo { width: 36px; height: 36px; border-radius: 10px; overflow: hidden; box-shadow: 0 0 26px rgba(130,46,245,.55); }
+    .nav-logo img { width: 100%; height: 100%; object-fit: cover; }
+    .nav-name { font-size: 16px; font-weight: 900; letter-spacing: 3.5px; color: #fff; }
+    .nav-right { display: flex; align-items: center; gap: 22px; }
+    .nav-link { font-size: 13px; color: var(--faint); text-decoration: none; transition: color .2s; }
+    .nav-link:hover { color: #fff; }
+    .nav-cta {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 22px; border-radius: 50px; font-size: 13px; font-weight: 700;
+      color: #fff; text-decoration: none;
+      background: linear-gradient(135deg,#6318CC,#8B2EF5);
+      border: 1px solid rgba(160,100,255,.3);
+      box-shadow: 0 4px 24px rgba(130,46,245,.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(130,46,245,.6); }
+
+    /* ── SECTIONS ── */
+    .sec { padding: 110px 0; position: relative; z-index: 2; }
+    .sec-dark { background: rgba(6,2,22,.5); }
+    .sec-tag {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      letter-spacing: 3.5px; text-transform: uppercase;
+      color: rgba(170,130,255,.68); margin-bottom: 16px;
+    }
+    .sec-h2 { font-size: clamp(28px,4vw,46px); font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 16px; }
+    .sec-sub { font-size: 17px; color: var(--muted); line-height: 1.82; max-width: 540px; }
+    .sec-sub.c { text-align: center; margin: 0 auto; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--bdr);
+      border-radius: 22px; padding: 32px 26px;
+      position: relative; overflow: hidden;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(160,120,255,.4), transparent);
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(150,110,255,.38);
+      box-shadow: 0 20px 60px rgba(100,40,220,.22);
+    }
+    .card-ico {
+      width: 52px; height: 52px; border-radius: 16px; margin-bottom: 18px;
+      background: linear-gradient(135deg,rgba(80,28,200,.7),rgba(120,46,240,.7));
+      border: 1px solid rgba(140,90,255,.25);
+      display: flex; align-items: center; justify-content: center; font-size: 24px;
+    }
+    .card h3 { font-size: 19px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .card p { font-size: 14px; color: var(--muted); line-height: 1.74; }
+    .pill {
+      display: inline-block; margin-top: 16px; font-size: 11px; font-weight: 700;
+      color: rgba(185,155,255,.88);
+      background: rgba(100,55,230,.14);
+      border: 1px solid rgba(140,100,255,.22); border-radius: 20px; padding: 3px 13px;
+    }
+    .nc-ghost {
+      position: absolute; bottom: -16px; left: -6px; font-size: 110px;
+      font-weight: 900; line-height: 1; color: rgba(110,70,255,.07);
+      user-select: none; pointer-events: none; letter-spacing: -4px;
+    }
+
+    /* ── FADE IN ── */
+    .fi { opacity: 0; transform: translateY(28px); transition: opacity .75s ease, transform .75s ease; }
+    .fi.v { opacity: 1; transform: translateY(0); }
+    .d1{transition-delay:.12s} .d2{transition-delay:.26s} .d3{transition-delay:.4s} .d4{transition-delay:.54s}
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    .hero {
+      min-height: 100vh; padding: 90px 0 80px;
+      display: flex; align-items: center;
+      position: relative; z-index: 2; overflow: hidden;
+    }
+    .hero-wave {
+      position: absolute; width: 130%; height: 55%;
+      bottom: -10%; left: -15%;
+      background: linear-gradient(115deg, rgba(36,28,160,.18) 0%, rgba(90,40,220,.12) 35%, rgba(50,160,255,.06) 65%, transparent 85%);
+      border-radius: 35% 65% 25% 75% / 55% 25% 75% 45%;
+      transform: rotate(-5deg); filter: blur(55px);
+      pointer-events: none; z-index: 0;
+    }
+    /* Grid: phones LEFT (55%), text RIGHT (45%) — physical LTR */
+    .hero-grid {
+      display: grid; grid-template-columns: 55% 45%;
+      gap: 36px; align-items: center; direction: ltr;
+    }
+    .hero-grid > * { direction: rtl; }
+
+    /* ── Fan phones ── */
+    .hero-phones { display: flex; align-items: center; justify-content: center; position: relative; }
+    .fan-wrap { display: flex; align-items: center; justify-content: center; direction: ltr; }
+    .fan-ph { flex-shrink: 0; position: relative; }
+    .fan-ph img { width: auto; border-radius: 0; display: block; }
+    .fp1 { transform: perspective(900px) rotateY(20deg) rotateZ(4deg); z-index: 1; margin-right: -80px; }
+    .fp1 img { height: 315px; filter: drop-shadow(0 16px 32px rgba(14,30,120,.75)) brightness(.7); }
+    .fp2 { transform: perspective(900px) rotateY(10deg) rotateZ(2deg); z-index: 3; margin-right: -65px; }
+    .fp2 img { height: 390px; filter: drop-shadow(0 22px 44px rgba(18,40,140,.72)) brightness(.86); }
+    .fp3 { z-index: 10; }
+    .fp3 img { height: 458px; filter: drop-shadow(0 28px 58px rgba(24,52,180,.78)); animation: float 8s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+    .fp4 { transform: perspective(900px) rotateY(-10deg) rotateZ(-2deg); z-index: 3; margin-left: -65px; }
+    .fp4 img { height: 390px; filter: drop-shadow(0 22px 44px rgba(18,40,140,.72)) brightness(.86); }
+    .fp5 { transform: perspective(900px) rotateY(-20deg) rotateZ(-4deg); z-index: 1; margin-left: -80px; }
+    .fp5 img { height: 315px; filter: drop-shadow(0 16px 32px rgba(14,30,120,.75)) brightness(.7); }
+
+    /* ── Text side ── */
+    .hero-right { text-align: right; }
+
+    /* S icon + STABLUE side by side (LTR row) */
+    .hero-brand-row {
+      display: flex; align-items: center; gap: 18px;
+      direction: ltr; margin-bottom: 22px;
+    }
+    .hero-s-icon {
+      width: 92px; height: 92px; border-radius: 22px; overflow: hidden; flex-shrink: 0;
+      box-shadow: 0 0 38px rgba(50,80,220,.65), 0 0 80px rgba(36,60,200,.38);
+      animation: s-pulse 5s ease-in-out infinite;
+    }
+    @keyframes s-pulse {
+      0%,100%{ box-shadow: 0 0 38px rgba(50,80,220,.65), 0 0 80px rgba(36,60,200,.38); }
+      50%{ box-shadow: 0 0 58px rgba(70,100,240,.88), 0 0 120px rgba(56,80,220,.58); }
+    }
+    .hero-s-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-brand-text { text-align: left; }
+    .hero-brand-name {
+      font-size: clamp(34px,4.2vw,60px); font-weight: 900;
+      letter-spacing: 9px; color: #fff; line-height: 1;
+    }
+    .hero-brand-sub {
+      font-size: 12px; font-weight: 500; letter-spacing: 5px;
+      color: rgba(160,178,255,.48); margin-top: 7px; text-transform: uppercase;
+    }
+
+    /* Hebrew heading */
+    .hero-h1 {
+      font-size: clamp(34px,4.2vw,56px); font-weight: 900;
+      line-height: 1.1; letter-spacing: -1px; color: #fff;
+      margin-bottom: 28px; text-align: right;
+    }
+    .hl-bp {
+      background: linear-gradient(95deg,#5577FF 0%,#9955EE 55%,#AA44DD 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    /* 4 feature icons: horizontal row (LTR), separated by thin lines */
+    .hero-feat-row {
+      display: flex; direction: ltr;
+      border-top: 1px solid rgba(50,80,200,.2);
+      padding-top: 22px; margin-bottom: 28px;
+    }
+    .feat-col { flex: 1; text-align: center; padding: 0 6px; border-left: 1px solid rgba(50,80,200,.2); }
+    .feat-col:first-child { border-left: none; }
+    .feat-col svg { display: block; margin: 0 auto 7px; color: rgba(160,185,255,.88); }
+    .feat-col strong { display: block; font-size: 12px; font-weight: 700; color: rgba(225,232,255,.97); margin-bottom: 4px; }
+    .feat-col span { display: block; font-size: 10.5px; color: rgba(175,190,255,.78); line-height: 1.45; }
+
+    /* CTA button */
+    .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .btn-hero {
+      display: flex; align-items: center; gap: 10px;
+      padding: 15px 30px; border-radius: 50px; font-size: 15px; font-weight: 800;
+      color: #fff; text-decoration: none;
+      background: linear-gradient(135deg,#1A34B8,#3320C8,#5220C4);
+      border: 1px solid rgba(80,110,255,.28);
+      box-shadow: 0 8px 36px rgba(26,52,190,.52);
+      transition: transform .22s, box-shadow .22s;
+      animation: pulse-b 4s ease-in-out infinite;
+    }
+    .btn-hero:hover { transform: translateY(-3px); box-shadow: 0 16px 52px rgba(40,72,216,.7); }
+    @keyframes pulse-b { 0%,100%{box-shadow:0 8px 36px rgba(26,52,190,.52)} 50%{box-shadow:0 8px 50px rgba(50,80,220,.74)} }
+    .btn-soft { font-size: 14px; color: var(--muted); text-decoration: none; border-bottom: 1px solid rgba(120,150,255,.2); padding-bottom: 2px; transition: color .2s; }
+    .btn-soft:hover { color: #fff; }
+    .hero-note { font-size: 12px; color: rgba(175,190,255,.82); margin-top: 12px; text-align: right; }
+
+    /* ══════════════════════════════════
+       STATS
+    ══════════════════════════════════ */
+    .stats-bar {
+      background: rgba(10,4,32,.6);
+      border-top: 1px solid rgba(130,80,255,.1);
+      border-bottom: 1px solid rgba(130,80,255,.1);
+      position: relative; z-index: 2;
+    }
+    .stats-inner { display: flex; justify-content: space-around; align-items: center; padding: 30px 0; flex-wrap: wrap; gap: 24px; }
+    .stat { text-align: center; }
+    .stat-n { font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -1px; line-height: 1; }
+    .stat-n em { font-style: normal; font-size: 18px; color: var(--teal); }
+    .stat-l { font-size: 12px; color: var(--faint); margin-top: 5px; }
+    .stat-sep { width: 1px; height: 36px; background: rgba(130,80,255,.1); }
+
+    /* ══════════════════════════════════
+       3-COL NUMBERED CARDS
+    ══════════════════════════════════ */
+    .ncards { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 52px; }
+
+    /* ══════════════════════════════════
+       4-PHONE SHOWCASE
+    ══════════════════════════════════ */
+    .showcase-head { text-align: center; margin-bottom: 64px; }
+    .phones-row { display: flex; justify-content: center; align-items: flex-end; flex-wrap: wrap; }
+    .pcol { display: flex; flex-direction: column; align-items: center; gap: 20px; flex: 1; min-width: 190px; max-width: 278px; }
+    .pcol.up { transform: translateY(-32px); }
+    .pcol img { width: 100%; max-width: 258px; height: auto; border-radius: 0; filter: drop-shadow(0 24px 52px rgba(80,28,180,.62)); transition: transform .4s; }
+    .pcol img:hover { transform: translateY(-8px) scale(1.025); }
+    .pcol.up img { max-width: 275px; }
+    .plbl { text-align: center; }
+    .plbl strong { display: block; font-size: 13px; font-weight: 700; color: rgba(185,165,255,.9); }
+    .plbl span { display: block; font-size: 11px; color: var(--faint); margin-top: 3px; }
+
+    /* ══════════════════════════════════
+       SPLIT SECTIONS
+    ══════════════════════════════════ */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .split.rev { direction: ltr; }
+    .split.rev > * { direction: rtl; }
+    .split-img { display: flex; justify-content: center; }
+    .split-img img {
+      max-height: 560px; width: auto; max-width: 100%;
+      border-radius: 0;
+      filter: drop-shadow(0 32px 66px rgba(80,28,200,.62));
+      transition: transform .4s;
+    }
+    .split-img img:hover { transform: translateY(-10px) scale(1.018); }
+    .split-text { display: flex; flex-direction: column; justify-content: center; }
+    .split-list { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+    .split-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--muted); line-height: 1.6; }
+    .split-list li::before { content: ''; flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); margin-top: 10px; }
+    .split-list li strong { color: #fff; }
+
+    /* ══════════════════════════════════
+       TRUST
+    ══════════════════════════════════ */
+    .tcards { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 52px; }
+    .tc {
+      background: var(--card);
+      border: 1px solid var(--bdr);
+      border-radius: 22px; padding: 36px 24px; text-align: center;
+      transition: transform .3s, box-shadow .3s;
+      position: relative; overflow: hidden;
+    }
+    .tc::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(160,120,255,.35), transparent);
+    }
+    .tc:hover { transform: translateY(-6px); box-shadow: 0 18px 52px rgba(100,44,200,.22); }
+    .tc em { font-size: 32px; display: block; margin-bottom: 14px; font-style: normal; }
+    .tc h3 { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .tc p { font-size: 13px; color: var(--muted); line-height: 1.66; }
+    .disclaimer {
+      margin-top: 40px; padding: 18px 28px;
+      background: rgba(255,255,255,.01); border: 1px solid rgba(130,80,255,.1);
+      border-radius: 14px; font-size: 12px; color: rgba(120,100,200,.42); line-height: 1.65; text-align: center;
+    }
+    .disclaimer strong { color: rgba(165,135,255,.65); }
+
+    /* ══════════════════════════════════
+       CTA + FOOTER
+    ══════════════════════════════════ */
+    .cta-sec { text-align: center; padding-bottom: 130px; }
+    .cta-sec .sec-h2 { max-width: 500px; margin: 0 auto 12px; }
+    .cta-sec .sec-sub { margin: 0 auto 48px; }
+    .dl-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .dl-btn {
+      display: inline-flex; align-items: center; gap: 16px;
+      padding: 18px 42px; border-radius: 22px; color: #fff; text-decoration: none;
+      background: linear-gradient(135deg,#6318CC,#8B2EF5,#7422D8);
+      border: 1px solid rgba(160,100,255,.26);
+      box-shadow: 0 12px 52px rgba(110,28,220,.52);
+      transition: transform .25s, box-shadow .25s;
+      animation: pulse-p 4s ease-in-out infinite;
+    }
+    .dl-btn:hover { transform: translateY(-4px); box-shadow: 0 22px 66px rgba(130,46,245,.72); }
+    .dl-t { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+    .dl-sm { font-size: 11px; opacity: .55; }
+    .dl-lg { font-size: 20px; font-weight: 700; }
+    .android-note { font-size: 12px; color: rgba(140,110,220,.32); }
+
+    footer {
+      border-top: 1px solid rgba(130,80,255,.1);
+      padding: 44px 0 28px; position: relative; z-index: 2;
+    }
+    .foot-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 22px; }
+    .foot-brand { display: flex; align-items: center; gap: 10px; }
+    .foot-logo { width: 30px; height: 30px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 14px rgba(130,46,245,.42); }
+    .foot-logo img { width: 100%; height: 100%; object-fit: cover; }
+    .foot-name { font-size: 15px; font-weight: 900; letter-spacing: 2.5px; color: #fff; }
+    .foot-links { display: flex; gap: 22px; flex-wrap: wrap; }
+    .foot-links a { font-size: 13px; color: var(--faint); text-decoration: none; transition: color .2s; }
+    .foot-links a:hover { color: rgba(190,165,255,.9); }
+    .foot-copy { text-align: center; margin-top: 26px; padding-top: 18px; border-top: 1px solid rgba(130,80,255,.07); font-size: 11px; color: rgba(100,78,180,.32); }
+
+    /* ══════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════ */
+    @media(max-width:960px) {
+      .hero-grid { grid-template-columns:1fr; direction:rtl; gap:48px; }
+      .hero-grid > * { direction:rtl; }
+      .hero-phones { order:-1; }
+      .fp1,.fp5 { display:none; }
+      .fp2 { transform:perspective(900px) rotateY(13deg) rotateZ(2.5deg); margin-right:-62px; }
+      .fp2 img { height:310px; }
+      .fp3 img { height:395px; }
+      .fp4 { transform:perspective(900px) rotateY(-13deg) rotateZ(-2.5deg); margin-left:-62px; }
+      .fp4 img { height:310px; }
+      .hero-right { text-align:center; }
+      .hero-brand-row { justify-content:center; }
+      .hero-h1 { text-align:center; }
+      .hero-feat-row { justify-content:center; }
+      .hero-actions { justify-content:center; }
+      .hero-note { text-align:center; }
+      .ncards { grid-template-columns:1fr; }
+      .tcards { grid-template-columns:1fr; }
+      .split { grid-template-columns:1fr; gap:40px; }
+      .split.rev { direction:rtl; }
+      .split-img img { max-height:420px; }
+      .pcol.up { transform:none; }
+      .stat-sep { display:none; }
+      .foot-row { flex-direction:column; text-align:center; }
+      .foot-links { justify-content:center; }
+    }
+    @media(max-width:560px) {
+      .sec { padding:72px 0; }
+      .phones-row { flex-direction:column; align-items:center; gap:36px; }
+      .pcol { max-width:310px; width:100%; }
+      .fp2,.fp4 { display:none; }
+      .fp3 img { height:350px; }
+      .hero-feat-row { flex-wrap:wrap; gap:8px; }
+      .feat-col { min-width:45%; border-left:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-logo"><img src="icon.png" alt="Stablue" /></div>
+    <span class="nav-name">STABLUE</span>
+  </a>
+  <div class="nav-right">
+    <a href="#showcase" class="nav-link">מסכים</a>
+    <a href="#trust" class="nav-link">פרטיות</a>
+    <a href="#download" class="nav-cta">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
+      הורדה
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-wave" aria-hidden="true"></div>
+  <div class="wrap" style="position:relative;z-index:2">
+    <div class="hero-grid">
+
+      <!-- LEFT: fan phones -->
+      <div class="hero-phones fi">
+        <div class="fan-wrap">
+          <div class="fan-ph fp1"><img src="cropped/screen-journal.png" alt="" /></div>
+          <div class="fan-ph fp2"><img src="cropped/screen-breath.png" alt="" /></div>
+          <div class="fan-ph fp3"><img src="cropped/screen-home.png" alt="" /></div>
+          <div class="fan-ph fp4"><img src="cropped/screen-chat.png" alt="" /></div>
+          <div class="fan-ph fp5"><img src="cropped/screen-exercises.png" alt="" /></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: S + brand name + heading + features -->
+      <div class="hero-right fi d1">
+
+        <!-- S logo + STABLUE side by side -->
+        <div class="hero-brand-row">
+          <div class="hero-s-icon"><img src="icon.png" alt="Stablue" /></div>
+          <div class="hero-brand-text">
+            <div class="hero-brand-name">STABLUE</div>
+            <div class="hero-brand-sub">BACK TO STABLE</div>
+          </div>
+        </div>
+
+        <h1 class="hero-h1">הדרך שלך<br>לחזור <span class="hl-bp">לאיזון.</span></h1>
+
+        <!-- 4 feature icons horizontal row -->
+        <div class="hero-feat-row">
+          <div class="feat-col">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+            <strong>יומן מעקב</strong>
+            <span>מעקב אישי אחר ההתקדמות</span>
+          </div>
+          <div class="feat-col">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.16Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.16Z"/></svg>
+            <strong>תרגולים מותאמים</strong>
+            <span>נשימה, תנועה וספירה</span>
+          </div>
+          <div class="feat-col">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="8" cy="10.5" r=".8" fill="currentColor"/><circle cx="12" cy="10.5" r=".8" fill="currentColor"/><circle cx="16" cy="10.5" r=".8" fill="currentColor"/></svg>
+            <strong>שיחה עם AI</strong>
+            <span>תמיכה חכמה שמבינה</span>
+          </div>
+          <div class="feat-col">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <strong>חוויה אישית</strong>
+            <span>תוכניות מותאמות לך</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#download" class="btn-hero">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
+            הורדה ב-App Store
+          </a>
+        </div>
+        <p class="hero-note">🔒 14 ימי ניסיון מלא · חינמי · ללא כרטיס אשראי</p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="wrap">
+    <div class="stats-inner">
+      <div class="stat fi"><div class="stat-n">13<em>+</em></div><div class="stat-l">שלבי פרוטוקול</div></div>
+      <div class="stat-sep"></div>
+      <div class="stat fi d1"><div class="stat-n">14<em> יום</em></div><div class="stat-l">ניסיון חינמי</div></div>
+      <div class="stat-sep"></div>
+      <div class="stat fi d2"><div class="stat-n">100<em>%</em></div><div class="stat-l">מוצפן ופרטי</div></div>
+      <div class="stat-sep"></div>
+      <div class="stat fi d3"><div class="stat-n">4</div><div class="stat-l">כלים בלחיצה אחת</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="sec" id="features">
+  <div class="wrap">
+    <span class="sec-tag fi">מה בפנים</span>
+    <h2 class="sec-h2 fi">ארבעה כלים. מסך אחד.</h2>
+    <p class="sec-sub fi">כל מה שצריך ברגע קשה — נגיש ישירות ממסך הבית, בלי לחפש.</p>
+    <div class="ncards">
+      <div class="card fi">
+        <div class="nc-ghost">01</div>
+        <div class="card-ico">🫁</div>
+        <h3>פרוטוקול הרגעה</h3>
+        <p>כשחרדה פוגעת, הגוף עובר למצב סכנה. הפרוטוקול מנחה אותך בקול — נשימה, הידוק פיזי, עיגון חושי — שלב אחד, ועוד אחד, עד שהגוף זוכר שהוא בטוח.</p>
+        <span class="pill">גישה חופשית</span>
+      </div>
+      <div class="card fi d1">
+        <div class="nc-ghost">02</div>
+        <div class="card-ico">🤖</div>
+        <h3>שיחה עם AI</h3>
+        <p>לפעמים צריך רק מישהו שישמע. ה-AI מקשיב, מאשר ולא שופט — ומציע כלי התמודדות מתי שנדרש. השיחות לא נשמרות, הפרטיות שלך מוגנת.</p>
+        <span class="pill">פרימיום / ניסיון</span>
+      </div>
+      <div class="card fi d2">
+        <div class="nc-ghost">03</div>
+        <div class="card-ico">📅</div>
+        <h3>יומן מעקב</h3>
+        <p>דקה ביום, כל יום. מצב רוח והערה קצרה — הלוח הצבעוני מראה את הדפוסים לאורך זמן. הכל מוצפן ורק אצלך.</p>
+        <span class="pill">פרימיום / ניסיון</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4-PHONE SHOWCASE -->
+<section class="sec sec-dark" id="showcase">
+  <div class="wrap">
+    <div class="showcase-head">
+      <span class="sec-tag fi">מבט מקרוב</span>
+      <h2 class="sec-h2 fi">המסכים מהאפליקציה</h2>
+    </div>
+    <div class="phones-row">
+      <div class="pcol fi">
+        <img src="cropped/screen-exercises.png" alt="תרגילים" />
+        <div class="plbl"><strong>תפריט תרגילים</strong><span>01 נשימה · 02 פיזי · 03 ספירה</span></div>
+      </div>
+      <div class="pcol up fi d1">
+        <img src="cropped/screen-breath.png" alt="נשימה" />
+        <div class="plbl"><strong>פרוטוקול נשימה</strong><span>לשאוף · 3/12 · Fibonacci</span></div>
+      </div>
+      <div class="pcol fi d2">
+        <img src="cropped/screen-chat.png" alt="AI" />
+        <div class="plbl"><strong>שיחת AI</strong><span>Gemini 2.5 Flash</span></div>
+      </div>
+      <div class="pcol fi d3">
+        <img src="cropped/screen-journal.png" alt="יומן" />
+        <div class="plbl"><strong>יומן מעקב</strong><span>לוח שנה · סטטיסטיקות</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT: EXERCISES -->
+<section class="sec">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-img fi">
+        <img src="cropped/screen-exercises.png" alt="תרגילים" />
+      </div>
+      <div class="split-text">
+        <span class="sec-tag fi">בחר תרגיל</span>
+        <h2 class="sec-h2 fi">בוחרים מה מתאים עכשיו</h2>
+        <p class="sec-sub fi">בחרדה לא תמיד ברור מה יעזור. כל תרגיל מסביר בדיוק מה הוא עושה — ואתה בוחר מה נכון ברגע הזה.</p>
+        <ul class="split-list fi d1">
+          <li><strong>נשימה</strong> — מאטה את הדופק ומחזירה תחושת שליטה</li>
+          <li><strong>תרגילים פיזיים</strong> — כיווץ והרפיה שמורידים מתח מהגוף</li>
+          <li><strong>ספירה קוגניטיבית</strong> — מסיחה את הקשב ממחשבות מציפות</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT: BREATHING -->
+<section class="sec sec-dark">
+  <div class="wrap">
+    <div class="split rev">
+      <div class="split-text">
+        <span class="sec-tag fi">שלב הנשימה</span>
+        <h2 class="sec-h2 fi">הגוף חוזר לקצב</h2>
+        <p class="sec-sub fi">הנקודות מתרחבות — שאיפה. מתכווצות — נשיפה. 12 מחזורים כאלה, 4 שניות פנימה ו-6 שניות החוצה, ומערכת העצבים מתחילה להירגע. כל שלב מלווה בקריינות עברית.</p>
+      </div>
+      <div class="split-img fi d1">
+        <img src="cropped/screen-breath.png" alt="נשימה" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT: PHYSICAL -->
+<section class="sec">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-img fi">
+        <img src="cropped/screen-physical.png" alt="תרגיל פיזי" />
+      </div>
+      <div class="split-text">
+        <span class="sec-tag fi">תרגילים פיזיים</span>
+        <h2 class="sec-h2 fi">לחץ פיזי<br>במקום לחץ נפשי</h2>
+        <p class="sec-sub fi">כיווץ והרפיה שולחים לגוף אות: הסכנה עברה. שלושה תרגילים קצרים — כפות ידיים, כפות רגליים, כתפיים — מונחים בקול עם ספירה לאחור.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT: SUPPORT -->
+<section class="sec sec-dark">
+  <div class="wrap">
+    <div class="split rev">
+      <div class="split-text">
+        <span class="sec-tag fi">מסך תמיכה</span>
+        <h2 class="sec-h2 fi">ברגע שקשה,<br>הכל כבר מוכן.</h2>
+        <p class="sec-sub fi">ברגע הקשה לא מחפשים מספרים. מגדירים מראש — קו ער"ן, מישהו לצלצל אליו, שיר שעוזר — ולוחצים ברגע האמת.</p>
+        <ul class="split-list fi d1">
+          <li>קו <strong>ער"ן 1201</strong> — תמיכה נפשית 24/7, חינמית</li>
+          <li>עד שני <strong>אנשי קשר חירום</strong> שתגדיר בעצמך</li>
+          <li><strong>שיר מרגיע</strong> מ-YouTube או Spotify — מופעל מיד</li>
+        </ul>
+      </div>
+      <div class="split-img fi d1">
+        <img src="cropped/screen-support.png" alt="תמיכה" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT: CHAT -->
+<section class="sec">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-img fi">
+        <img src="cropped/screen-chat.png" alt="שיחת AI" />
+      </div>
+      <div class="split-text">
+        <span class="sec-tag fi">שיחה עם AI</span>
+        <h2 class="sec-h2 fi">מישהו שמקשיב.<br>עכשיו.</h2>
+        <p class="sec-sub fi">שיחה שמרגישה אנושית — ה-AI מאשר את מה שאתה מרגיש, לא ממהר לפתרון, ומציע תרגיל נשימה ישירות בתוך השיחה כשצריך. השיחות לא נשמרות אצלנו.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT: JOURNAL -->
+<section class="sec sec-dark">
+  <div class="wrap">
+    <div class="split rev">
+      <div class="split-text">
+        <span class="sec-tag fi">יומן מעקב</span>
+        <h2 class="sec-h2 fi">ימים טובים.<br>ימים קשים.<br>הדפוס מתגלה.</h2>
+        <p class="sec-sub fi">לוח שנה צבעוני, ימי רצף, סטטיסטיקות חודשיות — ובסוף החודש מבינים קצת יותר. כל ההערות מוצפנות AES-256 ולא עוזבות את המכשיר שלך.</p>
+      </div>
+      <div class="split-img fi d1">
+        <img src="cropped/screen-journal.png" alt="יומן" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="sec" id="trust">
+  <div class="wrap">
+    <span class="sec-tag fi">פרטיות</span>
+    <h2 class="sec-h2 fi">הנתונים שלך, נקודה.</h2>
+    <p class="sec-sub fi">בנינו את Stablue כך שגם אנחנו לא יכולים לקרוא את מה שאתה כותב.</p>
+    <div class="tcards">
+      <div class="tc fi">
+        <em>🔐</em>
+        <h3>הצפנה AES-256</h3>
+        <p>הערות היומן מוצפנות לפני שיוצאות מהמכשיר. גם אם נרצה — אין לנו אפשרות לקרוא אותן.</p>
+      </div>
+      <div class="tc fi d1">
+        <em>🗑️</em>
+        <h3>מחיקה מלאה</h3>
+        <p>לוחצים "מחיקת חשבון" — כל הנתונים נמחקים מהשרת לצמיתות. בלי עיכוב, בלי שאלות.</p>
+      </div>
+      <div class="tc fi d2">
+        <em>⚕️</em>
+        <h3>לא תחליף לטיפול</h3>
+        <p>Stablue היא כלי תמיכה עצמי. כשהמצוקה מתמשכת — חשוב לפנות לאיש מקצוע.</p>
+      </div>
+    </div>
+    <div class="disclaimer fi">
+      <strong>הבהרה:</strong> Stablue אינה אפליקציה רפואית ואינה מחליפה אבחון, ייעוץ או טיפול פסיכולוגי / פסיכיאטרי.
+      במצוקה חמורה — פנה/י לאיש מקצוע או לקו ער"ן: <strong>1201</strong> &nbsp;·&nbsp; חירום: <strong>101</strong>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec cta-sec" id="download">
+  <div class="wrap">
+    <span class="sec-tag fi">התחל/י</span>
+    <h2 class="sec-h2 fi">14 ימי ניסיון. חינמי.</h2>
+    <p class="sec-sub c fi">פותחים את האפליקציה — יש גישה מלאה לכל הפיצ'רים מהרגע הראשון. אחרי 14 יום, נשימה בסיסית נשארת חינמית לתמיד.</p>
+    <div class="dl-wrap fi">
+      <a href="https://apps.apple.com/app/id_PLACEHOLDER" class="dl-btn">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
+        <div class="dl-t">
+          <span class="dl-sm">הורדה חינמית ב-</span>
+          <span class="dl-lg">App Store</span>
+        </div>
+      </a>
+      <p class="android-note">Android — בקרוב ב-Google Play</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="foot-brand">
+        <div class="foot-logo"><img src="icon.png" alt="Stablue" /></div>
+        <span class="foot-name">STABLUE</span>
+      </div>
+      <div class="foot-links">
+        <a href="https://stablue-app.github.io/stablue-legal" target="_blank">מדיניות פרטיות</a>
+        <a href="https://stablue-app.github.io/stablue-legal/terms" target="_blank">תנאי שימוש</a>
+        <a href="mailto:support@stablue.app">צור קשר</a>
+        <a href="https://apps.apple.com/app/id_PLACEHOLDER" target="_blank">App Store</a>
+      </div>
+    </div>
+    <div class="foot-copy">© 2025 Stablue · כל הזכויות שמורות · לא תחליף לטיפול מקצועי</div>
+  </div>
+</footer>
+
+<script>
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.fi').forEach(el => io.observe(el));
+setTimeout(() => document.querySelectorAll('.hero .fi, .stats-bar .fi').forEach(el => el.classList.add('v')), 60);
+</script>
+</body>
+</html>
