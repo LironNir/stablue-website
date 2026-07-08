@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stablue — הדרך שלך לחזור לאיזון</title>
+  <title>Stablue: הדרך שלך לחזור לאיזון</title>
   <meta name="description" content="אפליקציה בעברית לחרדה ולחץ. פרוטוקול הרגעה, שיחת AI, יומן מוצפן ומסך תמיכה." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -70,6 +70,22 @@
       transition: transform .2s, box-shadow .2s;
     }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(130,46,245,.6); }
+    .nav-burger { display: none; width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(130,80,255,.22); background: rgba(255,255,255,.03); align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+    .nav-burger svg { width: 18px; height: 18px; color: #fff; }
+    .nav-scrim { position: fixed; inset: 0; z-index: 950; background: rgba(4,2,16,.6); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+    .nav-scrim.open { opacity: 1; pointer-events: auto; }
+    .nav-drawer {
+      position: fixed; top: 0; bottom: 0; right: 0; z-index: 960; width: 78vw; max-width: 300px;
+      background: rgba(10,6,32,.97); backdrop-filter: blur(24px);
+      border-left: 1px solid rgba(130,80,255,.18);
+      display: flex; flex-direction: column; gap: 4px; padding: 24px 20px;
+      transform: translateX(100%); transition: transform .32s cubic-bezier(.2,.8,.2,1);
+    }
+    .nav-drawer.open { transform: translateX(0); }
+    .nav-drawer-close { align-self: flex-start; width: 34px; height: 34px; border-radius: 9px; border: 1px solid rgba(130,80,255,.22); background: rgba(255,255,255,.03); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; cursor: pointer; }
+    .nav-drawer-close svg { width: 15px; height: 15px; color: #fff; }
+    .nav-drawer a { padding: 13px 6px; font-size: 15px; color: rgba(225,230,255,.85); text-decoration: none; border-bottom: 1px solid rgba(130,80,255,.1); }
+    .nav-drawer .nav-cta { justify-content: center; margin-top: 16px; }
 
     /* ── SECTIONS ── */
     .sec { padding: 110px 0; position: relative; z-index: 2; }
@@ -141,7 +157,7 @@
       transform: rotate(-5deg); filter: blur(55px);
       pointer-events: none; z-index: 0;
     }
-    /* Grid: phones LEFT (55%), text RIGHT (45%) — physical LTR */
+    /* Grid: phones LEFT (55%), text RIGHT (45%), physical LTR */
     .hero-grid {
       display: grid; grid-template-columns: 55% 45%;
       gap: 36px; align-items: center; direction: ltr;
@@ -153,17 +169,21 @@
     .fan-wrap { display: flex; align-items: center; justify-content: center; direction: ltr; }
     .fan-ph { flex-shrink: 0; position: relative; }
     .fan-ph img { width: auto; border-radius: 0; display: block; }
-    .fp1 { transform: perspective(900px) rotateY(20deg) rotateZ(4deg); z-index: 1; margin-right: -80px; }
-    .fp1 img { height: 315px; filter: drop-shadow(0 16px 32px rgba(14,30,120,.75)) brightness(.7); }
-    .fp2 { transform: perspective(900px) rotateY(10deg) rotateZ(2deg); z-index: 3; margin-right: -65px; }
-    .fp2 img { height: 390px; filter: drop-shadow(0 22px 44px rgba(18,40,140,.72)) brightness(.86); }
-    .fp3 { z-index: 10; }
-    .fp3 img { height: 458px; filter: drop-shadow(0 28px 58px rgba(24,52,180,.78)); animation: float 8s ease-in-out infinite; }
+    .fp1 { transform: perspective(900px) rotateY(26deg) rotateZ(5deg); z-index: 1; margin-right: -88px; }
+    .fp1 img { height: 258px; filter: drop-shadow(0 14px 28px rgba(14,30,120,.75)) brightness(.58); }
+    .fp2 { transform: perspective(900px) rotateY(18deg) rotateZ(3.5deg); z-index: 2; margin-right: -78px; }
+    .fp2 img { height: 316px; filter: drop-shadow(0 18px 36px rgba(16,34,130,.74)) brightness(.72); }
+    .fp3 { transform: perspective(900px) rotateY(9deg) rotateZ(2deg); z-index: 4; margin-right: -68px; }
+    .fp3 img { height: 396px; filter: drop-shadow(0 22px 44px rgba(18,40,140,.72)) brightness(.88); }
+    .fp4 { z-index: 10; }
+    .fp4 img { height: 458px; filter: drop-shadow(0 28px 58px rgba(24,52,180,.78)); animation: float 8s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-    .fp4 { transform: perspective(900px) rotateY(-10deg) rotateZ(-2deg); z-index: 3; margin-left: -65px; }
-    .fp4 img { height: 390px; filter: drop-shadow(0 22px 44px rgba(18,40,140,.72)) brightness(.86); }
-    .fp5 { transform: perspective(900px) rotateY(-20deg) rotateZ(-4deg); z-index: 1; margin-left: -80px; }
-    .fp5 img { height: 315px; filter: drop-shadow(0 16px 32px rgba(14,30,120,.75)) brightness(.7); }
+    .fp5 { transform: perspective(900px) rotateY(-9deg) rotateZ(-2deg); z-index: 4; margin-left: -68px; }
+    .fp5 img { height: 396px; filter: drop-shadow(0 22px 44px rgba(18,40,140,.72)) brightness(.88); }
+    .fp6 { transform: perspective(900px) rotateY(-18deg) rotateZ(-3.5deg); z-index: 2; margin-left: -78px; }
+    .fp6 img { height: 316px; filter: drop-shadow(0 18px 36px rgba(16,34,130,.74)) brightness(.72); }
+    .fp7 { transform: perspective(900px) rotateY(-26deg) rotateZ(-5deg); z-index: 1; margin-left: -88px; }
+    .fp7 img { height: 258px; filter: drop-shadow(0 14px 28px rgba(14,30,120,.75)) brightness(.58); }
 
     /* ── Text side ── */
     .hero-right { text-align: right; }
@@ -193,6 +213,15 @@
       color: rgba(160,178,255,.48); margin-top: 7px; text-transform: uppercase;
     }
 
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px; border-radius: 50px; margin-bottom: 20px;
+      font-size: 12.5px; font-weight: 600; color: rgba(210,195,255,.92);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(140,100,255,.28);
+    }
+    .hero-badge svg { color: var(--teal); flex-shrink: 0; }
+
     /* Hebrew heading */
     .hero-h1 {
       font-size: clamp(34px,4.2vw,56px); font-weight: 900;
@@ -203,6 +232,10 @@
       background: linear-gradient(95deg,#5577FF 0%,#9955EE 55%,#AA44DD 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
+    .hero-h1 .word { display: inline-block; opacity: 0; filter: blur(10px); transform: translateY(20px); transition: opacity .6s ease, filter .6s ease, transform .6s ease; }
+    .hero-h1 .word.v { opacity: 1; filter: blur(0); transform: translateY(0); }
+    .hero-h1 .w1 { transition-delay: 0s; } .hero-h1 .w2 { transition-delay: .08s; }
+    .hero-h1 .w3 { transition-delay: .2s; } .hero-h1 .w4 { transition-delay: .28s; }
 
     /* 4 feature icons: horizontal row (LTR), separated by thin lines */
     .hero-feat-row {
@@ -219,6 +252,7 @@
     /* CTA button */
     .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
     .btn-hero {
+      position: relative; overflow: hidden;
       display: flex; align-items: center; gap: 10px;
       padding: 15px 30px; border-radius: 50px; font-size: 15px; font-weight: 800;
       color: #fff; text-decoration: none;
@@ -229,6 +263,13 @@
       animation: pulse-b 4s ease-in-out infinite;
     }
     .btn-hero:hover { transform: translateY(-3px); box-shadow: 0 16px 52px rgba(40,72,216,.7); }
+    .btn-hero::before, .dl-btn::before {
+      content: ''; position: absolute; inset: -60%;
+      background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,.4) 12deg, transparent 32deg);
+      animation: shimmer-rotate 3.2s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes shimmer-rotate { to { transform: rotate(360deg); } }
     @keyframes pulse-b { 0%,100%{box-shadow:0 8px 36px rgba(26,52,190,.52)} 50%{box-shadow:0 8px 50px rgba(50,80,220,.74)} }
     .btn-soft { font-size: 14px; color: var(--muted); text-decoration: none; border-bottom: 1px solid rgba(120,150,255,.2); padding-bottom: 2px; transition: color .2s; }
     .btn-soft:hover { color: #fff; }
@@ -253,7 +294,8 @@
     /* ══════════════════════════════════
        3-COL NUMBERED CARDS
     ══════════════════════════════════ */
-    .ncards { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 52px; }
+    .ncards { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-top: 52px; }
+    @media(max-width:1100px) { .ncards { grid-template-columns: repeat(2,1fr); } }
 
     /* ══════════════════════════════════
        4-PHONE SHOWCASE
@@ -288,6 +330,12 @@
     .split-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--muted); line-height: 1.6; }
     .split-list li::before { content: ''; flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); margin-top: 10px; }
     .split-list li strong { color: #fff; }
+    .split-tag {
+      display: inline-block; margin-right: 8px; font-size: 10px; font-weight: 700;
+      color: rgba(185,155,255,.88); background: rgba(100,55,230,.14);
+      border: 1px solid rgba(140,100,255,.22); border-radius: 20px; padding: 2px 9px;
+      vertical-align: middle;
+    }
 
     /* ══════════════════════════════════
        TRUST
@@ -323,6 +371,7 @@
     .cta-sec .sec-sub { margin: 0 auto 48px; }
     .dl-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
     .dl-btn {
+      position: relative; overflow: hidden;
       display: inline-flex; align-items: center; gap: 16px;
       padding: 18px 42px; border-radius: 22px; color: #fff; text-decoration: none;
       background: linear-gradient(135deg,#6318CC,#8B2EF5,#7422D8);
@@ -358,12 +407,12 @@
       .hero-grid { grid-template-columns:1fr; direction:rtl; gap:48px; }
       .hero-grid > * { direction:rtl; }
       .hero-phones { order:-1; }
-      .fp1,.fp5 { display:none; }
-      .fp2 { transform:perspective(900px) rotateY(13deg) rotateZ(2.5deg); margin-right:-62px; }
-      .fp2 img { height:310px; }
-      .fp3 img { height:395px; }
-      .fp4 { transform:perspective(900px) rotateY(-13deg) rotateZ(-2.5deg); margin-left:-62px; }
-      .fp4 img { height:310px; }
+      .fp1,.fp2,.fp6,.fp7 { display:none; }
+      .fp3 { transform:perspective(900px) rotateY(13deg) rotateZ(2.5deg); margin-right:-62px; }
+      .fp3 img { height:310px; }
+      .fp4 img { height:395px; }
+      .fp5 { transform:perspective(900px) rotateY(-13deg) rotateZ(-2.5deg); margin-left:-62px; }
+      .fp5 img { height:310px; }
       .hero-right { text-align:center; }
       .hero-brand-row { justify-content:center; }
       .hero-h1 { text-align:center; }
@@ -384,10 +433,19 @@
       .sec { padding:72px 0; }
       .phones-row { flex-direction:column; align-items:center; gap:36px; }
       .pcol { max-width:310px; width:100%; }
-      .fp2,.fp4 { display:none; }
-      .fp3 img { height:350px; }
+      .fp3,.fp5 { display:none; }
+      .fp4 img { height:350px; }
       .hero-feat-row { flex-wrap:wrap; gap:8px; }
       .feat-col { min-width:45%; border-left:none; }
+
+      /* Nav: single-page scroll site, drop the anchor links on mobile,
+         keep brand + the one action that matters (download) */
+      nav { padding:0 18px; }
+      .nav-right .nav-link { display:none; }
+      .nav-right .nav-cta { display:none; }
+      .nav-name { font-size:14px; letter-spacing:2.5px; }
+      .nav-logo { width:32px; height:32px; }
+      .nav-burger { display:flex; }
     }
   </style>
 </head>
@@ -406,8 +464,24 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
       הורדה
     </a>
+    <button type="button" class="nav-burger" id="navBurger" aria-label="תפריט">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
   </div>
 </nav>
+
+<div class="nav-scrim" id="navScrim"></div>
+<div class="nav-drawer" id="navDrawer">
+  <button type="button" class="nav-drawer-close" id="navDrawerClose" aria-label="סגור">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <a href="#showcase">מסכים</a>
+  <a href="#trust">פרטיות</a>
+  <a href="#download" class="nav-cta">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
+    הורדה
+  </a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -419,10 +493,12 @@
       <div class="hero-phones fi">
         <div class="fan-wrap">
           <div class="fan-ph fp1"><img src="cropped/screen-journal.png" alt="" /></div>
-          <div class="fan-ph fp2"><img src="cropped/screen-breath.png" alt="" /></div>
-          <div class="fan-ph fp3"><img src="cropped/screen-home.png" alt="" /></div>
-          <div class="fan-ph fp4"><img src="cropped/screen-chat.png" alt="" /></div>
-          <div class="fan-ph fp5"><img src="cropped/screen-exercises.png" alt="" /></div>
+          <div class="fan-ph fp2"><img src="cropped/screen-physical.png" alt="" /></div>
+          <div class="fan-ph fp3"><img src="cropped/screen-breath.png" alt="" /></div>
+          <div class="fan-ph fp4"><img src="cropped/screen-home.png" alt="" /></div>
+          <div class="fan-ph fp5"><img src="cropped/screen-chat.png" alt="" /></div>
+          <div class="fan-ph fp6"><img src="cropped/screen-support.png" alt="" /></div>
+          <div class="fan-ph fp7"><img src="cropped/screen-exercises.png" alt="" /></div>
         </div>
       </div>
 
@@ -438,7 +514,12 @@
           </div>
         </div>
 
-        <h1 class="hero-h1">הדרך שלך<br>לחזור <span class="hl-bp">לאיזון.</span></h1>
+        <span class="hero-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          כלי תמיכה עצמית לרגעי חרדה
+        </span>
+
+        <h1 class="hero-h1"><span class="word w1">הדרך</span> <span class="word w2">שלך</span><br><span class="word w3">לחזור</span> <span class="word w4 hl-bp">לאיזון.</span></h1>
 
         <!-- 4 feature icons horizontal row -->
         <div class="hero-feat-row">
@@ -449,18 +530,18 @@
           </div>
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.16Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.16Z"/></svg>
-            <strong>תרגולים מותאמים</strong>
-            <span>נשימה, תנועה וספירה</span>
+            <strong>6 טכניקות הרגעה</strong>
+            <span>נשימה, הידוק, עיגון חושי ועוד</span>
           </div>
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="8" cy="10.5" r=".8" fill="currentColor"/><circle cx="12" cy="10.5" r=".8" fill="currentColor"/><circle cx="16" cy="10.5" r=".8" fill="currentColor"/></svg>
-            <strong>שיחה עם AI</strong>
+            <strong>שיחה עם <bdi>AI</bdi></strong>
             <span>תמיכה חכמה שמבינה</span>
           </div>
           <div class="feat-col">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            <strong>חוויה אישית</strong>
-            <span>תוכניות מותאמות לך</span>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+            <strong>מסך תמיכה</strong>
+            <span>אנשי קשר, שיר מרגיע וקו ער"ן</span>
           </div>
         </div>
 
@@ -497,28 +578,35 @@
   <div class="wrap">
     <span class="sec-tag fi">מה בפנים</span>
     <h2 class="sec-h2 fi">ארבעה כלים. מסך אחד.</h2>
-    <p class="sec-sub fi">כל מה שצריך ברגע קשה — נגיש ישירות ממסך הבית, בלי לחפש.</p>
+    <p class="sec-sub fi">כל מה שצריך ברגע קשה, נגיש ישירות ממסך הבית, בלי לחפש.</p>
     <div class="ncards">
       <div class="card fi">
         <div class="nc-ghost">01</div>
         <div class="card-ico">🫁</div>
         <h3>פרוטוקול הרגעה</h3>
-        <p>כשחרדה פוגעת, הגוף עובר למצב סכנה. הפרוטוקול מנחה אותך בקול — נשימה, הידוק פיזי, עיגון חושי — שלב אחד, ועוד אחד, עד שהגוף זוכר שהוא בטוח.</p>
+        <p>כשחרדה פוגעת, הגוף עובר למצב סכנה. הפרוטוקול מנחה אותך בקול, נשימה, הידוק פיזי, עיגון חושי, שלב אחד, ועוד אחד, עד שהגוף זוכר שהוא בטוח.</p>
         <span class="pill">גישה חופשית</span>
       </div>
       <div class="card fi d1">
         <div class="nc-ghost">02</div>
         <div class="card-ico">🤖</div>
-        <h3>שיחה עם AI</h3>
-        <p>לפעמים צריך רק מישהו שישמע. ה-AI מקשיב, מאשר ולא שופט — ומציע כלי התמודדות מתי שנדרש. השיחות לא נשמרות, הפרטיות שלך מוגנת.</p>
-        <span class="pill">פרימיום / ניסיון</span>
+        <h3>שיחה עם <bdi>AI</bdi></h3>
+        <p>לפעמים צריך רק מישהו שישמע. ה-<bdi>AI</bdi> מקשיב, מאשר ולא שופט, ומציע תרגיל נשימה כשצריך. השיחות לא נשמרות אצלנו בשרת.</p>
+        <span class="pill">2 חינם ביום · פרימיום ללא הגבלה</span>
       </div>
       <div class="card fi d2">
         <div class="nc-ghost">03</div>
         <div class="card-ico">📅</div>
         <h3>יומן מעקב</h3>
-        <p>דקה ביום, כל יום. מצב רוח והערה קצרה — הלוח הצבעוני מראה את הדפוסים לאורך זמן. הכל מוצפן ורק אצלך.</p>
+        <p>דקה ביום, כל יום. מצב רוח והערה קצרה, הלוח הצבעוני מראה את הדפוסים לאורך זמן והרצף הכי ארוך שלך. ההערות מוצפנות.</p>
         <span class="pill">פרימיום / ניסיון</span>
+      </div>
+      <div class="card fi d3">
+        <div class="nc-ghost">04</div>
+        <div class="card-ico">💙</div>
+        <h3>מסך תמיכה</h3>
+        <p>קו ער"ן 1201 בלחיצה אחת, תמיד חופשי. אפשר גם להגדיר עד שני אנשי קשר חירום ושיר מרגיע לרגע שקשה.</p>
+        <span class="pill">גישה חופשית</span>
       </div>
     </div>
   </div>
@@ -542,7 +630,7 @@
       </div>
       <div class="pcol fi d2">
         <img src="cropped/screen-chat.png" alt="AI" />
-        <div class="plbl"><strong>שיחת AI</strong><span>Gemini 2.5 Flash</span></div>
+        <div class="plbl"><strong>שיחת <bdi>AI</bdi></strong><span>Gemini 2.5 Flash</span></div>
       </div>
       <div class="pcol fi d3">
         <img src="cropped/screen-journal.png" alt="יומן" />
@@ -562,11 +650,14 @@
       <div class="split-text">
         <span class="sec-tag fi">בחר תרגיל</span>
         <h2 class="sec-h2 fi">בוחרים מה מתאים עכשיו</h2>
-        <p class="sec-sub fi">בחרדה לא תמיד ברור מה יעזור. כל תרגיל מסביר בדיוק מה הוא עושה — ואתה בוחר מה נכון ברגע הזה.</p>
+        <p class="sec-sub fi">בחרדה לא תמיד ברור מה יעזור. שישה תרגילים שונים, כל אחד מסביר בדיוק מה הוא עושה, ואתה בוחר מה נכון ברגע הזה.</p>
         <ul class="split-list fi d1">
-          <li><strong>נשימה</strong> — מאטה את הדופק ומחזירה תחושת שליטה</li>
-          <li><strong>תרגילים פיזיים</strong> — כיווץ והרפיה שמורידים מתח מהגוף</li>
-          <li><strong>ספירה קוגניטיבית</strong> — מסיחה את הקשב ממחשבות מציפות</li>
+          <li><strong>נשימה</strong>, מאטה את הדופק ומחזירה תחושת שליטה</li>
+          <li><strong>תרגילי הידוק</strong>, כיווץ והרפיה שמורידים מתח מהגוף</li>
+          <li><strong>5-4-3-2-1</strong>, עיגון חושי בעזרת מה שרואים, נוגעים ושומעים <span class="split-tag">פרימיום</span></li>
+          <li><strong>ספירה</strong>, ספירה קוגניטיבית מ-0 עד 100 שמסיחה ממחשבות מציפות <span class="split-tag">פרימיום</span></li>
+          <li><strong>צבעים</strong>, איתור פריטים בצבע מסוים בסביבה <span class="split-tag">פרימיום</span></li>
+          <li><strong>מים קרים</strong>, שטיפת פנים קרה שמחזירה את הגוף לאיזון <span class="split-tag">פרימיום</span></li>
         </ul>
       </div>
     </div>
@@ -580,7 +671,7 @@
       <div class="split-text">
         <span class="sec-tag fi">שלב הנשימה</span>
         <h2 class="sec-h2 fi">הגוף חוזר לקצב</h2>
-        <p class="sec-sub fi">הנקודות מתרחבות — שאיפה. מתכווצות — נשיפה. 12 מחזורים כאלה, 4 שניות פנימה ו-6 שניות החוצה, ומערכת העצבים מתחילה להירגע. כל שלב מלווה בקריינות עברית.</p>
+        <p class="sec-sub fi">120 נקודות במבנה פיבונאצ'י מתרחבות בשאיפה ומתכווצות בנשיפה. 12 מחזורים, 4 שניות פנימה ו-6 שניות החוצה, ומערכת העצבים מתחילה להירגע. כל שלב מלווה בקריינות עברית.</p>
       </div>
       <div class="split-img fi d1">
         <img src="cropped/screen-breath.png" alt="נשימה" />
@@ -599,7 +690,7 @@
       <div class="split-text">
         <span class="sec-tag fi">תרגילים פיזיים</span>
         <h2 class="sec-h2 fi">לחץ פיזי<br>במקום לחץ נפשי</h2>
-        <p class="sec-sub fi">כיווץ והרפיה שולחים לגוף אות: הסכנה עברה. שלושה תרגילים קצרים — כפות ידיים, כפות רגליים, כתפיים — מונחים בקול עם ספירה לאחור.</p>
+        <p class="sec-sub fi">כיווץ והרפיה שולחים לגוף אות: הסכנה עברה. שלושה תרגילים קצרים (כפות ידיים, כפות רגליים, כתפיים) מונחים בקול עם ספירה לאחור.</p>
       </div>
     </div>
   </div>
@@ -612,11 +703,11 @@
       <div class="split-text">
         <span class="sec-tag fi">מסך תמיכה</span>
         <h2 class="sec-h2 fi">ברגע שקשה,<br>הכל כבר מוכן.</h2>
-        <p class="sec-sub fi">ברגע הקשה לא מחפשים מספרים. מגדירים מראש — קו ער"ן, מישהו לצלצל אליו, שיר שעוזר — ולוחצים ברגע האמת.</p>
+        <p class="sec-sub fi">ברגע הקשה לא מחפשים מספרים. מגדירים מראש, קו ער"ן, מישהו לצלצל אליו, שיר שעוזר, ולוחצים ברגע האמת.</p>
         <ul class="split-list fi d1">
-          <li>קו <strong>ער"ן 1201</strong> — תמיכה נפשית 24/7, חינמית</li>
+          <li>קו <strong>ער"ן 1201</strong>, תמיכה נפשית 24/7, חינמית</li>
           <li>עד שני <strong>אנשי קשר חירום</strong> שתגדיר בעצמך</li>
-          <li><strong>שיר מרגיע</strong> מ-YouTube או Spotify — מופעל מיד</li>
+          <li><strong>שיר מרגיע</strong> מ-YouTube או Spotify, מופעל מיד</li>
         </ul>
       </div>
       <div class="split-img fi d1">
@@ -634,9 +725,14 @@
         <img src="cropped/screen-chat.png" alt="שיחת AI" />
       </div>
       <div class="split-text">
-        <span class="sec-tag fi">שיחה עם AI</span>
+        <span class="sec-tag fi">שיחה עם <bdi>AI</bdi></span>
         <h2 class="sec-h2 fi">מישהו שמקשיב.<br>עכשיו.</h2>
-        <p class="sec-sub fi">שיחה שמרגישה אנושית — ה-AI מאשר את מה שאתה מרגיש, לא ממהר לפתרון, ומציע תרגיל נשימה ישירות בתוך השיחה כשצריך. השיחות לא נשמרות אצלנו.</p>
+        <p class="sec-sub fi">שיחה שמרגישה אנושית, ה-<bdi>AI</bdi> מאשר את מה שאתה מרגיש, לא ממהר לפתרון, ומציע תרגיל נשימה ישירות בתוך השיחה כשצריך.</p>
+        <ul class="split-list fi d1">
+          <li><strong>בטיחות</strong>, אם עולה סימן למצוקה קשה, השיחה ננעלת ומפנה מיד לער"ן 1201 או 101</li>
+          <li><strong>פרטיות</strong>, השיחות לא נשמרות אצלנו בשרת</li>
+          <li><strong>זמינות</strong>, 2 הודעות ביום חינם, ללא הגבלה בפרימיום ובניסיון</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -649,7 +745,7 @@
       <div class="split-text">
         <span class="sec-tag fi">יומן מעקב</span>
         <h2 class="sec-h2 fi">ימים טובים.<br>ימים קשים.<br>הדפוס מתגלה.</h2>
-        <p class="sec-sub fi">לוח שנה צבעוני, ימי רצף, סטטיסטיקות חודשיות — ובסוף החודש מבינים קצת יותר. כל ההערות מוצפנות AES-256 ולא עוזבות את המכשיר שלך.</p>
+        <p class="sec-sub fi">לוח שנה צבעוני, רצף ימים, סטטיסטיקות חודשיות, ובסוף החודש מבינים קצת יותר. ההערות מוצפנות AES-256 לפני שהן עוזבות את המכשיר.</p>
       </div>
       <div class="split-img fi d1">
         <img src="cropped/screen-journal.png" alt="יומן" />
@@ -668,22 +764,22 @@
       <div class="tc fi">
         <em>🔐</em>
         <h3>הצפנה AES-256</h3>
-        <p>הערות היומן מוצפנות לפני שיוצאות מהמכשיר. גם אם נרצה — אין לנו אפשרות לקרוא אותן.</p>
+        <p>הערות היומן מוצפנות לפני שיוצאות מהמכשיר. גם אם נרצה, אין לנו אפשרות לקרוא אותן.</p>
       </div>
       <div class="tc fi d1">
         <em>🗑️</em>
         <h3>מחיקה מלאה</h3>
-        <p>לוחצים "מחיקת חשבון" — כל הנתונים נמחקים מהשרת לצמיתות. בלי עיכוב, בלי שאלות.</p>
+        <p>לוחצים "מחיקת חשבון", כל הנתונים נמחקים מהשרת לצמיתות. בלי עיכוב, בלי שאלות.</p>
       </div>
       <div class="tc fi d2">
         <em>⚕️</em>
         <h3>לא תחליף לטיפול</h3>
-        <p>Stablue היא כלי תמיכה עצמי. כשהמצוקה מתמשכת — חשוב לפנות לאיש מקצוע.</p>
+        <p>Stablue היא כלי תמיכה עצמי. כשהמצוקה מתמשכת, חשוב לפנות לאיש מקצוע.</p>
       </div>
     </div>
     <div class="disclaimer fi">
       <strong>הבהרה:</strong> Stablue אינה אפליקציה רפואית ואינה מחליפה אבחון, ייעוץ או טיפול פסיכולוגי / פסיכיאטרי.
-      במצוקה חמורה — פנה/י לאיש מקצוע או לקו ער"ן: <strong>1201</strong> &nbsp;·&nbsp; חירום: <strong>101</strong>
+      במצוקה חמורה, פנה/י לאיש מקצוע או לקו ער"ן: <strong>1201</strong> &nbsp;·&nbsp; חירום: <strong>101</strong>
     </div>
   </div>
 </section>
@@ -693,7 +789,7 @@
   <div class="wrap">
     <span class="sec-tag fi">התחל/י</span>
     <h2 class="sec-h2 fi">14 ימי ניסיון. חינמי.</h2>
-    <p class="sec-sub c fi">פותחים את האפליקציה — יש גישה מלאה לכל הפיצ'רים מהרגע הראשון. אחרי 14 יום, נשימה בסיסית נשארת חינמית לתמיד.</p>
+    <p class="sec-sub c fi">פותחים את האפליקציה, יש גישה מלאה לכל הפיצ'רים מהרגע הראשון. אחרי 14 יום, נשימה ותרגילי הידוק נשארים חינמיים לתמיד.</p>
     <div class="dl-wrap fi">
       <a href="https://apps.apple.com/app/id_PLACEHOLDER" class="dl-btn">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
@@ -702,7 +798,7 @@
           <span class="dl-lg">App Store</span>
         </div>
       </a>
-      <p class="android-note">Android — בקרוב ב-Google Play</p>
+      <p class="android-note">Android, בקרוב ב-Google Play</p>
     </div>
   </div>
 </section>
@@ -722,16 +818,27 @@
         <a href="https://apps.apple.com/app/id_PLACEHOLDER" target="_blank">App Store</a>
       </div>
     </div>
-    <div class="foot-copy">© 2025 Stablue · כל הזכויות שמורות · לא תחליף לטיפול מקצועי</div>
+    <div class="foot-copy">© 2026 Stablue · כל הזכויות שמורות · לא תחליף לטיפול מקצועי</div>
   </div>
 </footer>
 
 <script>
+const navBurger = document.getElementById('navBurger');
+const navDrawer = document.getElementById('navDrawer');
+const navScrim = document.getElementById('navScrim');
+const navDrawerClose = document.getElementById('navDrawerClose');
+function openDrawer() { navDrawer.classList.add('open'); navScrim.classList.add('open'); }
+function closeDrawer() { navDrawer.classList.remove('open'); navScrim.classList.remove('open'); }
+navBurger.addEventListener('click', openDrawer);
+navDrawerClose.addEventListener('click', closeDrawer);
+navScrim.addEventListener('click', closeDrawer);
+navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+
 const io = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
 }, { threshold: 0.07 });
 document.querySelectorAll('.fi').forEach(el => io.observe(el));
-setTimeout(() => document.querySelectorAll('.hero .fi, .stats-bar .fi').forEach(el => el.classList.add('v')), 60);
+setTimeout(() => document.querySelectorAll('.hero .fi, .stats-bar .fi, .hero-h1 .word').forEach(el => el.classList.add('v')), 60);
 </script>
 </body>
 </html>
