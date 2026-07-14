@@ -166,7 +166,7 @@
 
     /* ── Fan phones ── */
     .hero-phones { display: flex; align-items: center; justify-content: center; position: relative; }
-    .fan-wrap { display: flex; align-items: center; justify-content: center; direction: ltr; }
+    .fan-wrap { display: flex; align-items: center; justify-content: center; direction: ltr; max-width: 100%; }
     .fan-ph { flex-shrink: 0; position: relative; }
     .fan-ph img { width: auto; border-radius: 0; display: block; }
     .fp1 { transform: perspective(900px) rotateY(26deg) rotateZ(5deg); z-index: 1; margin-right: -88px; }
@@ -412,7 +412,7 @@
     @media(max-width:960px) {
       .hero-grid { grid-template-columns:1fr; direction:rtl; gap:48px; }
       .hero-grid > * { direction:rtl; }
-      .hero-phones { order:-1; }
+      .hero-phones { order:-1; width:100%; min-width:0; }
       .fp1,.fp2,.fp6,.fp7 { display:none; }
       .fp3 { transform:perspective(900px) rotateY(13deg) rotateZ(2.5deg); margin-right:-62px; }
       .fp3 img { height:310px; }
@@ -439,8 +439,30 @@
       .sec { padding:72px 0; }
       .phones-row { flex-direction:column; align-items:center; gap:36px; }
       .pcol { max-width:310px; width:100%; }
-      .fp3,.fp5 { display:none; }
-      .fp4 img { height:350px; }
+      .fp1 { display:none; }
+      .fp2,.fp6,.fp7 { display:block; }
+      .fan-wrap {
+        overflow-x: auto; overflow-y: visible;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        justify-content: flex-start;
+        padding: 8px 34vw 24px;
+        width: 100%;
+      }
+      .fan-wrap::-webkit-scrollbar { display:none; }
+      .fan-ph { scroll-snap-align: center; }
+      .fp2 { transform:perspective(900px) rotateY(16deg) rotateZ(3.5deg); margin-right:-40px; }
+      .fp2 img { height:210px; }
+      .fp3 { transform:perspective(900px) rotateY(9deg) rotateZ(2deg); margin-right:-36px; }
+      .fp3 img { height:255px; }
+      .fp4 img { height:300px; }
+      .fp5 { transform:perspective(900px) rotateY(-9deg) rotateZ(-2deg); margin-left:-36px; }
+      .fp5 img { height:255px; }
+      .fp6 { transform:perspective(900px) rotateY(-16deg) rotateZ(-3.5deg); margin-left:-40px; }
+      .fp6 img { height:210px; }
+      .fp7 { transform:perspective(900px) rotateY(-24deg) rotateZ(-5deg); margin-left:-44px; }
+      .fp7 img { height:180px; }
       .hero-feat-row { flex-wrap:wrap; gap:8px; }
       .feat-col { min-width:45%; border-left:none; }
 
