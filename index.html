@@ -167,6 +167,7 @@
     /* ── Fan phones ── */
     .hero-phones { display: flex; align-items: center; justify-content: center; position: relative; }
     .fan-wrap { display: flex; align-items: center; justify-content: center; direction: ltr; max-width: 100%; }
+    .mob-carousel { display: none; }
     .fan-ph { flex-shrink: 0; position: relative; }
     .fan-ph img { width: auto; border-radius: 0; display: block; }
     .fp1 { transform: perspective(900px) rotateY(26deg) rotateZ(5deg); z-index: 1; margin-right: -88px; }
@@ -439,30 +440,20 @@
       .sec { padding:72px 0; }
       .phones-row { flex-direction:column; align-items:center; gap:36px; }
       .pcol { max-width:310px; width:100%; }
-      .fp1 { display:none; }
-      .fp2,.fp6,.fp7 { display:block; }
-      .fan-wrap {
-        overflow-x: auto; overflow-y: visible;
-        scroll-snap-type: x proximity;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        justify-content: flex-start;
-        padding: 8px 34vw 24px;
-        width: 100%;
-      }
-      .fan-wrap::-webkit-scrollbar { display:none; }
-      .fan-ph { scroll-snap-align: center; }
-      .fp2 { transform:perspective(900px) rotateY(16deg) rotateZ(3.5deg); margin-right:-40px; }
-      .fp2 img { height:210px; }
-      .fp3 { transform:perspective(900px) rotateY(9deg) rotateZ(2deg); margin-right:-36px; }
-      .fp3 img { height:255px; }
-      .fp4 img { height:300px; }
-      .fp5 { transform:perspective(900px) rotateY(-9deg) rotateZ(-2deg); margin-left:-36px; }
-      .fp5 img { height:255px; }
-      .fp6 { transform:perspective(900px) rotateY(-16deg) rotateZ(-3.5deg); margin-left:-40px; }
-      .fp6 img { height:210px; }
-      .fp7 { transform:perspective(900px) rotateY(-24deg) rotateZ(-5deg); margin-left:-44px; }
-      .fp7 img { height:180px; }
+      .fan-wrap { display:none; }
+      .mob-carousel { display:flex; align-items:center; justify-content:center; direction:ltr; width:100%; touch-action: pan-y; }
+      .mob-slot { flex-shrink:0; position:relative; transition: transform .4s ease, opacity .4s ease; }
+      .mob-slot img { width:auto; border-radius:0; display:block; transition: height .4s ease, filter .4s ease; }
+      .mob-p-2 { transform:perspective(900px) rotateY(16deg) rotateZ(3.5deg); z-index:1; margin-right:-40px; }
+      .mob-p-2 img { height:210px; filter: drop-shadow(0 18px 36px rgba(16,34,130,.74)) brightness(.72); }
+      .mob-p-1 { transform:perspective(900px) rotateY(9deg) rotateZ(2deg); z-index:2; margin-right:-36px; }
+      .mob-p-1 img { height:255px; filter: drop-shadow(0 22px 44px rgba(18,40,140,.72)) brightness(.88); }
+      .mob-p0 { z-index:10; }
+      .mob-p0 img { height:300px; filter: drop-shadow(0 28px 58px rgba(24,52,180,.78)); }
+      .mob-p1 { transform:perspective(900px) rotateY(-9deg) rotateZ(-2deg); z-index:2; margin-left:-36px; }
+      .mob-p1 img { height:255px; filter: drop-shadow(0 22px 44px rgba(18,40,140,.72)) brightness(.88); }
+      .mob-p2 { transform:perspective(900px) rotateY(-16deg) rotateZ(-3.5deg); z-index:1; margin-left:-40px; }
+      .mob-p2 img { height:210px; filter: drop-shadow(0 18px 36px rgba(16,34,130,.74)) brightness(.72); }
       .hero-feat-row { flex-wrap:wrap; gap:8px; }
       .feat-col { min-width:45%; border-left:none; }
 
@@ -527,6 +518,13 @@
           <div class="fan-ph fp5"><img src="cropped/screen-chat.png" alt="" /></div>
           <div class="fan-ph fp6"><img src="cropped/screen-support.png" alt="" /></div>
           <div class="fan-ph fp7"><img src="cropped/screen-exercises.png" alt="" /></div>
+        </div>
+        <div class="mob-carousel" id="mobCarousel">
+          <div class="mob-slot mob-p-2"><img id="mobImgM2" src="" alt="" /></div>
+          <div class="mob-slot mob-p-1"><img id="mobImgM1" src="" alt="" /></div>
+          <div class="mob-slot mob-p0"><img id="mobImg0" src="" alt="" /></div>
+          <div class="mob-slot mob-p1"><img id="mobImg1" src="" alt="" /></div>
+          <div class="mob-slot mob-p2"><img id="mobImg2" src="" alt="" /></div>
         </div>
       </div>
 
@@ -861,6 +859,47 @@ navBurger.addEventListener('click', openDrawer);
 navDrawerClose.addEventListener('click', closeDrawer);
 navScrim.addEventListener('click', closeDrawer);
 navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+
+// Infinite swipe carousel (mobile hero phones) — wraps around in both directions
+const mobImages = [
+  'cropped/screen-journal.png',
+  'cropped/screen-physical.png',
+  'cropped/screen-breath.png',
+  'cropped/screen-home.png',
+  'cropped/screen-chat.png',
+  'cropped/screen-support.png',
+  'cropped/screen-exercises.png',
+];
+const mobSlotEls = [
+  document.getElementById('mobImgM2'),
+  document.getElementById('mobImgM1'),
+  document.getElementById('mobImg0'),
+  document.getElementById('mobImg1'),
+  document.getElementById('mobImg2'),
+];
+let mobIndex = 3; // start on "home"
+function renderMobCarousel() {
+  const n = mobImages.length;
+  mobSlotEls.forEach((img, slot) => {
+    const offset = slot - 2; // -2,-1,0,1,2
+    const idx = ((mobIndex + offset) % n + n) % n;
+    img.src = mobImages[idx];
+  });
+}
+renderMobCarousel();
+
+const mobCarousel = document.getElementById('mobCarousel');
+let touchStartX = null;
+mobCarousel.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+mobCarousel.addEventListener('touchend', e => {
+  if (touchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 32) {
+    mobIndex += dx < 0 ? 1 : -1;
+    renderMobCarousel();
+  }
+  touchStartX = null;
+});
 
 const io = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
