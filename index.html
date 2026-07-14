@@ -893,7 +893,7 @@ const mobCarousel = document.getElementById('mobCarousel');
 let dragStartX = null;
 let dragDx = 0;
 let carouselAnimating = false;
-const SLIDE_SHIFT = 150;
+const SLIDE_SHIFT = 70;
 
 function setCarouselX(px) { mobCarousel.style.transform = `translateX(${px}px)`; }
 
@@ -912,21 +912,33 @@ mobCarousel.addEventListener('touchmove', e => {
 mobCarousel.addEventListener('touchend', () => {
   if (dragStartX === null) return;
   dragStartX = null;
-  mobCarousel.style.transition = 'transform .34s cubic-bezier(.22,.85,.25,1)';
 
   if (Math.abs(dragDx) > 36) {
     carouselAnimating = true;
     const dir = dragDx < 0 ? 1 : -1;
+    // Slide a short distance while fading out — the fade masks the
+    // instant reset-and-reindex that happens once it's invisible,
+    // so the geometry snap (each slot has its own fixed size/rotation)
+    // never shows as a visible pop.
+    mobCarousel.style.transition = 'transform .2s ease-in, opacity .2s ease-in';
     setCarouselX(dir < 0 ? SLIDE_SHIFT : -SLIDE_SHIFT);
-    mobCarousel.addEventListener('transitionend', function onEnd() {
-      mobCarousel.removeEventListener('transitionend', onEnd);
+    mobCarousel.style.opacity = '0';
+    mobCarousel.addEventListener('transitionend', function onOut() {
+      mobCarousel.removeEventListener('transitionend', onOut);
       mobIndex += dir;
       renderMobCarousel();
       mobCarousel.style.transition = 'none';
       setCarouselX(0);
-      requestAnimationFrame(() => { carouselAnimating = false; });
+      void mobCarousel.offsetWidth; // force reflow so the fade-in actually animates
+      mobCarousel.style.transition = 'opacity .22s ease-out';
+      mobCarousel.style.opacity = '1';
+      mobCarousel.addEventListener('transitionend', function onIn() {
+        mobCarousel.removeEventListener('transitionend', onIn);
+        carouselAnimating = false;
+      }, { once: true });
     }, { once: true });
   } else {
+    mobCarousel.style.transition = 'transform .3s cubic-bezier(.22,.85,.25,1)';
     setCarouselX(0);
   }
   dragDx = 0;
