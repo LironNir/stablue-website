@@ -4,7 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stablue: הדרך שלך לחזור לאיזון</title>
-  <meta name="description" content="אפליקציה בעברית לחרדה ולחץ. פרוטוקול הרגעה, שיחת AI, יומן מוצפן ומסך תמיכה." />
+  <meta name="description" content="אפליקציה לחרדה ולחץ בעברית ובאנגלית: פרוטוקול הרגעה מודרך, שיחה עם AI, יומן מעקב, מסך תמיכה וצלילי רגיעה. באייפון ובאנדרואיד." />
+  <meta property="og:title" content="Stablue: הדרך שלך לחזור לאיזון" />
+  <meta property="og:description" content="פרוטוקול הרגעה מודרך לרגעי חרדה, שיחה עם AI, יומן מעקב ומסך תמיכה. זמינה ב-App Store וב-Google Play." />
+  <meta property="og:image" content="https://lironnir.github.io/stablue-website/icon.png" />
+  <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -17,7 +21,7 @@
       --card:   rgba(14,18,60,.78);
       --bdr:    rgba(60,90,220,.22);
       --text:   #FFFFFF;
-      --muted:  rgba(185,195,255,.6);
+      --muted:  rgba(208,215,255,.84);
       --faint:  rgba(120,140,220,.44);
     }
     html { scroll-behavior: smooth; }
@@ -156,6 +160,10 @@
       border-radius: 35% 65% 25% 75% / 55% 25% 75% 45%;
       transform: rotate(-5deg); filter: blur(55px);
       pointer-events: none; z-index: 0;
+      /* The hero clips the glow at ~80% of its height; fade it out before
+         that so the hero blends into the next section without a hard edge. */
+      -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 78%);
+      mask-image: linear-gradient(to bottom, #000 30%, transparent 78%);
     }
     /* Grid: phones LEFT (55%), text RIGHT (45%), physical LTR */
     .hero-grid {
@@ -237,6 +245,13 @@
     .hero-h1 .word.v { opacity: 1; filter: blur(0); transform: translateY(0); }
     .hero-h1 .w1 { transition-delay: 0s; } .hero-h1 .w2 { transition-delay: .08s; }
     .hero-h1 .w3 { transition-delay: .2s; } .hero-h1 .w4 { transition-delay: .28s; }
+    .hero-sub {
+      font-size: 17px; line-height: 1.75; color: rgba(205,212,255,.82);
+      max-width: 520px; margin: -10px 0 26px auto; text-align: right;
+      opacity: 0; transform: translateY(12px); transition: opacity .7s ease .55s, transform .7s ease .55s;
+    }
+    .hero-sub.v { opacity: 1; transform: none; }
+    .hero-sub bdi { color: #fff; font-weight: 700; letter-spacing: .5px; }
 
     /* 4 feature icons: horizontal row (LTR), separated by thin lines */
     .hero-feat-row {
@@ -244,7 +259,7 @@
       border-top: 1px solid rgba(50,80,200,.2);
       padding-top: 22px; margin-bottom: 28px;
     }
-    .feat-col { flex: 1; text-align: center; padding: 0 6px; border-left: 1px solid rgba(50,80,200,.2); }
+    .feat-col { direction: rtl; flex: 1; text-align: center; padding: 0 6px; border-left: 1px solid rgba(50,80,200,.2); }
     .feat-col:first-child { border-left: none; }
     .feat-col svg { display: block; margin: 0 auto 7px; color: rgba(160,185,255,.88); }
     .feat-col strong { display: block; font-size: 12px; font-weight: 700; color: rgba(225,232,255,.97); margin-bottom: 4px; }
@@ -364,11 +379,18 @@
     .tc h3 { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 10px; }
     .tc p { font-size: 13px; color: var(--muted); line-height: 1.66; }
     .disclaimer {
-      margin-top: 40px; padding: 18px 28px;
-      background: rgba(255,255,255,.01); border: 1px solid rgba(130,80,255,.1);
-      border-radius: 14px; font-size: 12px; color: rgba(120,100,200,.42); line-height: 1.65; text-align: center;
+      margin: 48px auto 0; max-width: 820px; padding: 30px 32px; text-align: center;
+      background: linear-gradient(160deg, rgba(56,232,207,.10), rgba(20,24,70,.85) 60%);
+      border: 1px solid rgba(56,232,207,.45); border-radius: 22px;
+      box-shadow: 0 18px 60px rgba(20,120,140,.22);
     }
-    .disclaimer strong { color: rgba(165,135,255,.65); }
+    .disc-head { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #6FF2DC; }
+    .disc-head strong { font-size: 22px; font-weight: 900; color: #fff; }
+    .disclaimer p { font-size: 17px; line-height: 1.75; color: rgba(232,236,255,.95); max-width: 640px; margin: 0 auto; }
+    @media (max-width: 560px) {
+      .disclaimer { padding: 24px 18px; }
+      .disclaimer p { font-size: 15.5px; }
+    }
 
     /* ══════════════════════════════════
        CTA + FOOTER
@@ -424,6 +446,7 @@
       .hero-right { text-align:center; }
       .hero-brand-row { justify-content:center; }
       .hero-h1 { text-align:center; }
+      .hero-sub { text-align:center; margin:-10px auto 24px; font-size:15.5px; }
       .hero-feat-row { justify-content:center; }
       .hero-actions { justify-content:center; }
       .hero-note { text-align:center; }
@@ -467,6 +490,233 @@
       .nav-logo { width:32px; height:32px; }
       .nav-burger { display:flex; }
     }
+    /* ══════════════════════════════════
+       STORE BUTTONS
+    ══════════════════════════════════ */
+    .store-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .hero .store-row { justify-content: flex-start; }
+    .store-btn {
+      display: inline-flex; align-items: center; gap: 12px; direction: ltr;
+      padding: 12px 26px 12px 22px; border-radius: 16px; text-decoration: none; color: #fff;
+      background: linear-gradient(135deg, rgba(36,72,216,.92), rgba(99,24,204,.92));
+      border: 1px solid rgba(160,130,255,.35);
+      box-shadow: 0 10px 38px rgba(60,50,220,.45), inset 0 1px 0 rgba(255,255,255,.14);
+      position: relative; overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .store-btn::before {
+      content: ''; position: absolute; top: 0; bottom: 0; width: 30%; left: -35%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      transform: skewX(-20deg); animation: storeShine 6s ease-in-out infinite;
+    }
+    .store-btn + .store-btn::before { animation-delay: 1.2s; }
+    @keyframes storeShine { 0%, 62% { left: -35%; } 82%, 100% { left: 130%; } }
+    .store-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 52px rgba(80,60,240,.62); }
+    .store-t { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
+    .store-sm { font-size: 11px; color: rgba(220,225,255,.8); direction: rtl; }
+    .store-lg { font-size: 19px; font-weight: 800; letter-spacing: .2px; }
+    .hero .store-btn { padding: 10px 20px 10px 16px; border-radius: 14px; }
+    .hero .store-lg { font-size: 16px; }
+
+    .center-head { text-align: center; margin-bottom: 56px; }
+    .center-head .sec-sub { margin: 0 auto; text-align: center; }
+
+    /* ══════════════════════════════════
+       STORY: sticky phone, pages flip as you scroll
+    ══════════════════════════════════ */
+    .story { position: relative; z-index: 2; padding: 110px 0 40px; }
+    .story-head { text-align: center; margin-bottom: 20px; }
+    .story-head .sec-sub { margin: 0 auto; }
+    .story-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 70px;
+      direction: ltr; /* phone on the physical left, text on the right */
+    }
+    .story-grid > * { direction: rtl; }
+    .story-stage {
+      position: sticky; top: 64px; height: calc(100vh - 64px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+    }
+    .story-glow {
+      position: absolute; width: 420px; height: 420px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(70,90,255,.38), rgba(110,40,230,.16) 45%, transparent 70%);
+      filter: blur(20px); animation: glowBreath 7s ease-in-out infinite; pointer-events: none;
+    }
+    @keyframes glowBreath { 0%,100% { transform: scale(.92); opacity: .75; } 50% { transform: scale(1.08); opacity: 1; } }
+
+    .story-phone {
+      --ph-h: min(640px, calc(100vh - 170px));
+      position: relative; height: var(--ph-h); aspect-ratio: 402 / 874;
+      border-radius: calc(var(--ph-h) * .085);
+      background: linear-gradient(145deg, #3a3f55, #15172a 38%, #0b0c18 62%, #2d3148);
+      padding: calc(var(--ph-h) * .016);
+      box-shadow:
+        0 40px 90px rgba(8,12,60,.75), 0 0 0 1px rgba(160,170,255,.18),
+        inset 0 0 0 1px rgba(255,255,255,.08);
+      transform: perspective(1600px) rotateY(var(--tilt, -8deg)) rotateX(2deg);
+      transition: transform .9s cubic-bezier(.22,.8,.25,1);
+    }
+    .sp-btn { position: absolute; width: 3px; border-radius: 2px; background: #2a2e44; }
+    .sp-btn-a { left: -3px; top: 22%; height: 9%; }
+    .sp-btn-b { right: -3px; top: 27%; height: 13%; }
+    .sp-screen {
+      position: relative; width: 100%; height: 100%; overflow: hidden; background: #050817;
+      border-radius: calc(var(--ph-h) * .07);
+      perspective: 1800px; transform: translateZ(0); /* keeps the rounded clip on Safari */
+    }
+    .sp-page {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+      z-index: calc(30 - var(--i));
+      transform-origin: 100% 50%;
+      backface-visibility: hidden;
+      transition: transform 1s cubic-bezier(.62,.03,.28,1), filter 1s ease, opacity .25s linear .75s;
+    }
+    /* A turned page swings around its right edge like a page in a Hebrew book */
+    .sp-page.turned { transform: rotateY(var(--turn, 112deg)); filter: brightness(.45); opacity: 0; }
+    .sp-glare {
+      position: absolute; inset: 0; z-index: 40; pointer-events: none;
+      background: linear-gradient(115deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 32%, rgba(255,255,255,0) 70%, rgba(255,255,255,.05) 100%);
+    }
+    .sp-island {
+      position: absolute; z-index: 50; top: calc(var(--ph-h) * .028); left: 50%; transform: translateX(-50%);
+      width: 31%; height: calc(var(--ph-h) * .04); border-radius: 999px; background: #000;
+    }
+    .story-dots { display: flex; gap: 8px; direction: ltr; position: relative; z-index: 2; }
+    .story-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(140,150,255,.25); transition: all .4s; }
+    .story-dots i.on { width: 22px; border-radius: 6px; background: linear-gradient(90deg, #38E8CF, #8B6CFF); }
+
+    .story-steps { padding: 6vh 0 20vh; }
+    .story-step {
+      min-height: 78vh; display: flex; flex-direction: column; justify-content: center;
+      opacity: .22; transform: translateX(-14px); transition: opacity .6s ease, transform .6s ease;
+    }
+    .story-step.active { opacity: 1; transform: none; }
+    .ss-num {
+      font-size: 13px; font-weight: 800; letter-spacing: 3px; color: transparent;
+      background: linear-gradient(90deg, #38E8CF, #8B6CFF); -webkit-background-clip: text; background-clip: text;
+      margin-bottom: 12px;
+    }
+    .story-step h3 { font-size: clamp(26px, 3vw, 38px); font-weight: 900; line-height: 1.18; margin-bottom: 14px; }
+    .story-step p { font-size: 17px; color: var(--muted); line-height: 1.8; max-width: 470px; }
+    .ss-list { list-style: none; margin-top: 18px; display: flex; flex-direction: column; gap: 11px; max-width: 470px; }
+    .ss-list li { position: relative; padding-right: 18px; font-size: 15px; color: var(--muted); line-height: 1.6; }
+    .ss-list li::before { content: ''; position: absolute; right: 0; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+    .ss-list li strong { color: #fff; }
+    .ss-tag {
+      align-self: flex-start; margin-top: 20px; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 50px;
+      color: rgba(200,175,255,.95); background: rgba(110,60,230,.18); border: 1px solid rgba(150,110,255,.3);
+    }
+    .ss-tag.free { color: #7CF2DD; background: rgba(56,232,207,.1); border-color: rgba(56,232,207,.32); }
+
+    /* ══════════════════════════════════
+       PRICING
+    ══════════════════════════════════ */
+    .price-grid { display: grid; grid-template-columns: 1fr 1.35fr; gap: 22px; max-width: 920px; margin: 0 auto; align-items: stretch; }
+    .price-card {
+      background: var(--card); border: 1px solid var(--bdr); border-radius: 24px; padding: 34px 30px;
+      position: relative; overflow: hidden;
+    }
+    .price-card.premium {
+      border-color: rgba(150,110,255,.45);
+      background: linear-gradient(160deg, rgba(60,30,150,.55), rgba(14,18,60,.85) 55%);
+      box-shadow: 0 24px 70px rgba(90,40,220,.28);
+    }
+    .price-card h3 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .price-big { font-size: 46px; font-weight: 900; margin-bottom: 18px; }
+    .price-badge {
+      position: absolute; top: 20px; left: 20px; font-size: 12px; font-weight: 800; padding: 6px 13px; border-radius: 50px;
+      color: #0b1030; background: linear-gradient(90deg, #38E8CF, #9C8CFF);
+    }
+    .plans { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 16px 0 22px; }
+    .plan {
+      display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 14px 6px 12px; border-radius: 16px;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(140,150,255,.18); position: relative;
+    }
+    .plan.best { border-color: rgba(56,232,207,.55); background: rgba(56,232,207,.07); }
+    .plan-flag { position: absolute; top: -10px; font-size: 10px; font-weight: 800; padding: 2px 9px; border-radius: 50px; color: #0b1030; background: #38E8CF; white-space: nowrap; }
+    .plan-name { font-size: 13px; color: var(--muted); }
+    .plan-price { font-size: 21px; font-weight: 900; direction: ltr; }
+    .plan-per { font-size: 11px; color: var(--faint); }
+    .price-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .price-list li { position: relative; padding-right: 24px; font-size: 15px; color: rgba(225,230,255,.9); line-height: 1.5; }
+    .price-list li::before { content: '✓'; position: absolute; right: 0; top: 0; color: var(--teal); font-weight: 900; }
+    .price-fine { margin-top: 20px; font-size: 12px; color: var(--faint); line-height: 1.6; }
+
+    /* ══════════════════════════════════
+       TRUST (4 cards) + FAQ
+    ══════════════════════════════════ */
+    .tcards.four { grid-template-columns: repeat(4,1fr); margin-top: 0; }
+    .faq { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq details {
+      background: var(--card); border: 1px solid var(--bdr); border-radius: 18px; padding: 0 24px;
+      transition: border-color .3s, background .3s;
+    }
+    .faq details[open] { border-color: rgba(150,110,255,.4); background: rgba(30,24,90,.7); }
+    .faq summary {
+      list-style: none; cursor: pointer; padding: 20px 0; font-size: 17px; font-weight: 700;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: '+'; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+      font-size: 20px; font-weight: 400; color: var(--teal); background: rgba(56,232,207,.08); transition: transform .3s;
+    }
+    .faq details[open] summary::after { transform: rotate(45deg); }
+    .faq details p { padding: 0 0 22px; font-size: 15px; color: var(--muted); line-height: 1.75; }
+
+    /* ── Story / pricing / trust: tablet & phone ── */
+    @media (max-width: 960px) {
+      .tcards.four { grid-template-columns: repeat(2,1fr); }
+      .price-grid { grid-template-columns: 1fr; max-width: 520px; }
+    }
+    @media (max-width: 860px) {
+      .story { padding-top: 80px; }
+      .story-grid { grid-template-columns: 1fr; gap: 0; }
+      .story-stage {
+        top: 64px; height: auto; padding: 14px 0 8px; z-index: 1; gap: 12px;
+      }
+      .story-phone { --ph-h: min(50vh, 440px); --tilt: 0deg; }
+      .story-glow { width: 300px; height: 300px; }
+      .story-steps { position: relative; z-index: 2; padding: 2vh 0 30vh; }
+      .story-step {
+        min-height: 72vh; justify-content: flex-end; padding-bottom: 4vh;
+        opacity: 0; transform: translateY(24px);
+      }
+      .story-step.active { opacity: 1; transform: none; }
+      .story-step > * { position: relative; }
+      .story-step .ss-card {
+        background: rgba(10,12,44,.82); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(120,130,255,.2); border-radius: 22px; padding: 22px 20px;
+      }
+      .story-step h3 { font-size: 24px; }
+      .story-step p { font-size: 15.5px; }
+      .tcards.four { grid-template-columns: 1fr; }
+      .plans { gap: 8px; }
+      .plan-price { font-size: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .sp-page { transition: opacity .4s ease; }
+      .sp-page.turned { transform: none; }
+      .story-phone { transform: none; transition: none; }
+      .store-btn::before, .story-glow { animation: none; }
+    }
+    .ss-card { display: flex; flex-direction: column; }
+
+    bdi { white-space: nowrap; }
+    .tcards.six { grid-template-columns: repeat(3,1fr); margin-top: 0; }
+    .tc-ico {
+      width: 56px; height: 56px; margin: 0 auto 18px; border-radius: 18px; display: grid; place-items: center;
+      color: #7CF2DD; background: linear-gradient(145deg, rgba(56,232,207,.16), rgba(110,70,240,.2));
+      border: 1px solid rgba(120,200,240,.3); box-shadow: 0 10px 30px rgba(40,120,200,.18), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .tc h3 { font-size: 17px; }
+    .tc p { font-size: 14px; line-height: 1.7; }
+    .trust-link { text-align: center; margin-top: 26px; }
+    .trust-link a { color: #8FE9DA; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(143,233,218,.35); padding-bottom: 2px; }
+    .trust-link a:hover { color: #fff; }
+    .note-ico { vertical-align: -2px; margin-left: 4px; color: #7CF2DD; }
+    @media (max-width: 960px) { .tcards.six { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 860px) { .tcards.six { grid-template-columns: 1fr; } }
+
   </style>
 </head>
 <body>
@@ -478,10 +728,11 @@
     <span class="nav-name">STABLUE</span>
   </a>
   <div class="nav-right">
-    <a href="#showcase" class="nav-link">מסכים</a>
-    <a href="#trust" class="nav-link">פרטיות</a>
+    <a href="#story" class="nav-link">איך זה עובד</a>
+    <a href="#pricing" class="nav-link">מחירים</a>
+    <a href="#faq" class="nav-link">שאלות</a>
     <a href="#download" class="nav-cta">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
       הורדה
     </a>
     <button type="button" class="nav-burger" id="navBurger" aria-label="תפריט">
@@ -495,10 +746,12 @@
   <button type="button" class="nav-drawer-close" id="navDrawerClose" aria-label="סגור">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <a href="#showcase">מסכים</a>
+  <a href="#story">איך זה עובד</a>
+  <a href="#pricing">מחירים</a>
   <a href="#trust">פרטיות</a>
+  <a href="#faq">שאלות</a>
   <a href="#download" class="nav-cta">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
     הורדה
   </a>
 </div>
@@ -512,13 +765,13 @@
       <!-- LEFT: fan phones -->
       <div class="hero-phones fi">
         <div class="fan-wrap">
-          <div class="fan-ph fp1"><img src="cropped/screen-journal.png" alt="" /></div>
-          <div class="fan-ph fp2"><img src="cropped/screen-physical.png" alt="" /></div>
-          <div class="fan-ph fp3"><img src="cropped/screen-breath.png" alt="" /></div>
-          <div class="fan-ph fp4"><img src="cropped/screen-home.png" alt="" /></div>
-          <div class="fan-ph fp5"><img src="cropped/screen-chat.png" alt="" /></div>
-          <div class="fan-ph fp6"><img src="cropped/screen-support.png" alt="" /></div>
-          <div class="fan-ph fp7"><img src="cropped/screen-exercises.png" alt="" /></div>
+          <div class="fan-ph fp1"><img src="shots/framed/journal.png" alt="" /></div>
+          <div class="fan-ph fp2"><img src="shots/framed/physical.png" alt="" /></div>
+          <div class="fan-ph fp3"><img src="shots/framed/breath.png" alt="" /></div>
+          <div class="fan-ph fp4"><img src="shots/framed/home.png" alt="" /></div>
+          <div class="fan-ph fp5"><img src="shots/framed/chat.png" alt="" /></div>
+          <div class="fan-ph fp6"><img src="shots/framed/support.png" alt="" /></div>
+          <div class="fan-ph fp7"><img src="shots/framed/exercises.png" alt="" /></div>
         </div>
         <div class="mob-carousel" id="mobCarousel">
           <div class="mob-slot mob-p-2"><img id="mobImgM2" src="" alt="" /></div>
@@ -543,10 +796,11 @@
 
         <span class="hero-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          כלי תמיכה עצמית לרגעי חרדה
+          כל הכלים להתמודדות עם חרדה, במקום אחד
         </span>
 
         <h1 class="hero-h1"><span class="word w1">הדרך</span> <span class="word w2">שלך</span><br><span class="word w3">לחזור</span> <span class="word w4 hl-bp">לאיזון.</span></h1>
+        <p class="hero-sub">התקף חרדה, לחץ או פאניקה? לוחצים <bdi>START</bdi>, ופרוטוקול הרגעה מודרך בקול מוביל אותך צעד אחרי צעד, עם נשימה, הרפיית שרירים ותרגילי קרקוע, עד שהגוף נרגע.</p>
 
         <!-- 4 feature icons horizontal row -->
         <div class="hero-feat-row">
@@ -572,210 +826,183 @@
           </div>
         </div>
 
-        <div class="hero-actions">
-          <a href="#download" class="btn-hero">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
-            הורדה ב-App Store
+        <div class="store-row">
+          <a href="https://apps.apple.com/il/app/id6771805032" class="store-btn" target="_blank" rel="noopener">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
+            <span class="store-t"><span class="store-sm">להורדה ב-</span><span class="store-lg">App Store</span></span>
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.stablue.app" class="store-btn" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#34A853" d="M3.6 1.8 13.4 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1z"/><path fill="#FBBC04" d="m16.8 8.6 3.1 1.8c.9.5.9 1.8 0 2.3l-3.1 1.8-3.4-2.5 3.4-3.4z"/><path fill="#4285F4" d="M3.6 1.8c.3-.1.7-.1 1 .1l12.2 6.7-3.4 3.4L3.6 1.8z"/><path fill="#EA4335" d="m13.4 12 3.4 3.4-12.2 6.7c-.3.2-.7.2-1 .1L13.4 12z"/></svg>
+            <span class="store-t"><span class="store-sm">להורדה ב-</span><span class="store-lg">Google Play</span></span>
           </a>
         </div>
-        <p class="hero-note">🔒 14 ימי ניסיון מלא · חינמי · ללא כרטיס אשראי</p>
+        <p class="hero-note"><svg class="note-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg> 7 ימי פרימיום מתנה · ללא כרטיס אשראי · עברית ואנגלית</p>
 
       </div>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats-bar">
+<!-- STORY: sticky phone that flips through the app as you scroll -->
+<section class="story" id="story">
   <div class="wrap">
-    <div class="stats-inner">
-      <div class="stat fi"><div class="stat-n">13<em>+</em></div><div class="stat-l">שלבי פרוטוקול</div></div>
-      <div class="stat-sep"></div>
-      <div class="stat fi d1"><div class="stat-n">14<em> יום</em></div><div class="stat-l">ניסיון חינמי</div></div>
-      <div class="stat-sep"></div>
-      <div class="stat fi d2"><div class="stat-n">100<em>%</em></div><div class="stat-l">מוצפן ופרטי</div></div>
-      <div class="stat-sep"></div>
-      <div class="stat fi d3"><div class="stat-n">4</div><div class="stat-l">כלים בלחיצה אחת</div></div>
+    <div class="story-head">
+      <span class="sec-tag fi">איך זה עובד</span>
+      <h2 class="sec-h2 fi">כל מה שצריך ברגע קשה,<br>במקום אחד.</h2>
+      <p class="sec-sub c fi">גוללים, והטלפון מדפדף בין המסכים של האפליקציה.</p>
     </div>
-  </div>
-</div>
+    <div class="story-grid">
+      <div class="story-stage">
+        <div class="story-glow" aria-hidden="true"></div>
+        <div class="story-phone" id="storyPhone">
+          <div class="sp-btn sp-btn-a" aria-hidden="true"></div>
+          <div class="sp-btn sp-btn-b" aria-hidden="true"></div>
+          <div class="sp-screen">
+            <img class="sp-page" style="--i:0" src="shots/home.jpg" alt="מסך הבית של Stablue" />
+            <img class="sp-page" style="--i:1" src="shots/breath.jpg" alt="תרגיל נשימה מונחה" loading="lazy" />
+            <img class="sp-page" style="--i:2" src="shots/physical.jpg" alt="תרגיל לחיצה והרפיה" loading="lazy" />
+            <img class="sp-page" style="--i:3" src="shots/exercises.jpg" alt="תפריט התרגילים" loading="lazy" />
+            <img class="sp-page" style="--i:4" src="shots/chat.jpg" alt="שיחה עם AI" loading="lazy" />
+            <img class="sp-page" style="--i:5" src="shots/journal.jpg" alt="יומן מעקב" loading="lazy" />
+            <img class="sp-page" style="--i:6" src="shots/support.jpg" alt="מסך תמיכה" loading="lazy" />
+            <div class="sp-glare" aria-hidden="true"></div>
+          </div>
+          <div class="sp-island" aria-hidden="true"></div>
+        </div>
+        <div class="story-dots" id="storyDots" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+      </div>
 
-<!-- FEATURES -->
-<section class="sec" id="features">
-  <div class="wrap">
-    <span class="sec-tag fi">מה בפנים</span>
-    <h2 class="sec-h2 fi">ארבעה כלים. מסך אחד.</h2>
-    <p class="sec-sub fi">כל מה שצריך ברגע קשה, נגיש ישירות ממסך הבית, בלי לחפש.</p>
-    <div class="ncards">
-      <div class="card fi">
-        <div class="nc-ghost">01</div>
-        <div class="card-ico">🫁</div>
-        <h3>פרוטוקול הרגעה</h3>
-        <p>כשחרדה פוגעת, הגוף עובר למצב סכנה. הפרוטוקול מנחה אותך בקול, נשימה, הידוק פיזי, עיגון חושי, שלב אחד, ועוד אחד, עד שהגוף זוכר שהוא בטוח.</p>
-        <span class="pill">גישה חופשית</span>
-      </div>
-      <div class="card fi d1">
-        <div class="nc-ghost">02</div>
-        <div class="card-ico">🤖</div>
-        <h3>שיחה עם <bdi>AI</bdi></h3>
-        <p>לפעמים צריך רק מישהו שישמע. ה-<bdi>AI</bdi> מקשיב, מאשר ולא שופט, ומציע תרגיל נשימה כשצריך. השיחות לא נשמרות אצלנו בשרת.</p>
-        <span class="pill">2 חינם ביום · פרימיום ללא הגבלה</span>
-      </div>
-      <div class="card fi d2">
-        <div class="nc-ghost">03</div>
-        <div class="card-ico">📅</div>
-        <h3>יומן מעקב</h3>
-        <p>דקה ביום, כל יום. מצב רוח והערה קצרה, הלוח הצבעוני מראה את הדפוסים לאורך זמן והרצף הכי ארוך שלך. ההערות מוצפנות.</p>
-        <span class="pill">פרימיום / ניסיון</span>
-      </div>
-      <div class="card fi d3">
-        <div class="nc-ghost">04</div>
-        <div class="card-ico">💙</div>
-        <h3>מסך תמיכה</h3>
-        <p>קו ער"ן 1201 בלחיצה אחת, תמיד חופשי. אפשר גם להגדיר עד שני אנשי קשר חירום ושיר מרגיע לרגע שקשה.</p>
-        <span class="pill">גישה חופשית</span>
+      <div class="story-steps">
+        <article class="story-step">
+          <div class="ss-card">
+          <span class="ss-num">01</span>
+          <h3>התקף חרדה? מתחילים מכאן</h3>
+          <p>בעבודה, ברחוב או באמצע הלילה. לוחצים על <bdi>START</bdi>, וקול רגוע מוביל אותך צעד אחרי צעד, עד שהגוף נרגע.</p>
+          <ul class="ss-list">
+            <li><strong>פרוטוקול הרגעה</strong>, שמתקדם לבד משלב לשלב</li>
+            <li><strong>שיחה עם <bdi>AI</bdi>, יומן ומסך תמיכה</strong>, הכל מאותו מסך</li>
+            <li><strong>ווידג'ט לאייפון</strong>, שפותח את הנשימה ישר ממסך הבית</li>
+          </ul>
+          </div>
+        </article>
+
+        <article class="story-step">
+          <div class="ss-card">
+          <span class="ss-num">02</span>
+          <h3>נושמים יחד, עד שהקצב חוזר</h3>
+          <p>כשהלב דופק מהר והנשימה נתקעת, לא צריך לזכור מה לעשות. עוקבים אחרי העיגול: שואפים כשהוא גדל, נושפים כשהוא קטן, והקול סופר איתך.</p>
+          <ul class="ss-list">
+            <li><strong>4 שניות שאיפה, 6 שניות נשיפה</strong>, נשיפה ארוכה שעוזרת להאט את הדופק</li>
+            <li><strong>12 מחזורים מודרכים</strong>, בקריינות בעברית או באנגלית</li>
+          </ul>
+          <span class="ss-tag free">חינם</span>
+          </div>
+        </article>
+
+        <article class="story-step">
+          <div class="ss-card">
+          <span class="ss-num">03</span>
+          <h3>כשהגוף נדרך, מלמדים אותו להרפות</h3>
+          <p>כתפיים מכווצות, ידיים קפוצות, רגליים שלא נחות. לוחצים חזק כמה שניות, משחררים, ומרגישים איך המתח יוצא.</p>
+          <ul class="ss-list">
+            <li><strong>כפות רגליים, כפות ידיים וכתפיים</strong>, שלושה תרגילים קצרים</li>
+            <li><strong>טיימר וקריינות</strong>, שאומרים בדיוק מתי ללחוץ ומתי לשחרר</li>
+          </ul>
+          <span class="ss-tag">פרימיום</span>
+          </div>
+        </article>
+
+        <article class="story-step">
+          <div class="ss-card">
+          <span class="ss-num">04</span>
+          <h3>בוחרים את מה שעוזר לך</h3>
+          <p>יש ימים שהנשימה מספיקה, ויש ימים שהמחשבות לא מפסיקות. בתפריט התרגילים בוחרים לבד, וכל תרגיל מסביר במשפט אחד איך הוא עוזר.</p>
+          <ul class="ss-list">
+            <li><strong>מגוון תרגילי הרגעה</strong>, לנשימה, לגוף ולמחשבות</li>
+            <li><strong>תמיד במרחק לחיצה</strong>, בכל רגע שצריך</li>
+            <li><strong>מתאימים לכל מצב</strong>, מרגע של לחץ ועד התקף חרדה</li>
+          </ul>
+          <span class="ss-tag">פרימיום</span>
+          </div>
+        </article>
+
+<article class="story-step">
+          <div class="ss-card">
+          <span class="ss-num">05</span>
+          <h3>כשצריך לדבר, יש מי שמקשיב</h3>
+          <p>באמצע הלילה, בדרך לעבודה או רגע לפני פגישה. כותבים מה מרגישים, ומקבלים תשובה רגועה שלא שופטת, ולפעמים גם הצעה לתרגיל נשימה בתוך השיחה.</p>
+          <ul class="ss-list">
+            <li><strong>בטיחות</strong>, כשעולים סימנים למצוקה קשה, השיחה מפנה מיד לער"ן 1201 ולמד"א 101</li>
+            <li><strong>פרטיות</strong>, השיחות לא נשמרות בשרת שלנו</li>
+          </ul>
+          <span class="ss-tag free">2 הודעות ביום חינם</span>
+          </div>
+        </article>
+
+<article class="story-step">
+          <div class="ss-card">
+          <span class="ss-num">06</span>
+          <h3>ימים טובים, ימים קשים, והדפוס מתגלה</h3>
+          <p>דקה ביום: יציב, תנודתי או לא יציב, ומשפט קצר אם רוצים. הלוח הצבעוני מראה את החודש במבט אחד, עם רצף הימים היציבים וסיכום חודשי שאפשר לייצא כקובץ PDF ולהביא לטיפול.</p>
+          <span class="ss-tag">פרימיום</span>
+          </div>
+        </article>
+
+        <article class="story-step">
+          <div class="ss-card">
+          <span class="ss-num">07</span>
+          <h3>ברגע שקשה, הכל כבר מוכן</h3>
+          <p>מגדירים מראש, ולוחצים ברגע האמת בלי לחפש מספרים.</p>
+          <ul class="ss-list">
+            <li><strong>ער"ן 1201</strong>, עזרה נפשית ראשונה, בלחיצה אחת ובחינם</li>
+            <li><strong>שני אנשי קשר לחירום</strong> שבוחרים מאנשי הקשר בטלפון</li>
+            <li><strong>שיר שמרגיע אותך</strong>, מתוך <bdi>YouTube</bdi>, <bdi>Spotify</bdi> או <bdi>Apple Music</bdi></li>
+          </ul>
+          </div>
+        </article>
+
       </div>
     </div>
   </div>
 </section>
 
-<!-- 4-PHONE SHOWCASE -->
-<section class="sec sec-dark" id="showcase">
+<!-- PRICING -->
+<section class="sec sec-dark" id="pricing">
   <div class="wrap">
-    <div class="showcase-head">
-      <span class="sec-tag fi">מבט מקרוב</span>
-      <h2 class="sec-h2 fi">המסכים מהאפליקציה</h2>
+    <div class="center-head">
+      <span class="sec-tag fi">מחירים</span>
+      <h2 class="sec-h2 fi">מתחילים בחינם. משדרגים כשרוצים.</h2>
+      <p class="sec-sub c fi">בהתקנה מקבלים 7 ימי פרימיום מתנה, בלי כרטיס אשראי. אחריהם, תרגיל הנשימה, ער"ן ושתי הודעות <bdi>AI</bdi> ביום נשארים בחינם.</p>
     </div>
-    <div class="phones-row">
-      <div class="pcol fi">
-        <img src="cropped/screen-exercises.png" alt="תרגילים" />
-        <div class="plbl"><strong>תפריט תרגילים</strong><span>01 נשימה · 02 פיזי · 03 ספירה</span></div>
-      </div>
-      <div class="pcol up fi d1">
-        <img src="cropped/screen-breath.png" alt="נשימה" />
-        <div class="plbl"><strong>פרוטוקול נשימה</strong><span>לשאוף · 3/12 · Fibonacci</span></div>
-      </div>
-      <div class="pcol fi d2">
-        <img src="cropped/screen-chat.png" alt="AI" />
-        <div class="plbl"><strong>שיחת <bdi>AI</bdi></strong><span>Gemini 2.5 Flash</span></div>
-      </div>
-      <div class="pcol fi d3">
-        <img src="cropped/screen-journal.png" alt="יומן" />
-        <div class="plbl"><strong>יומן מעקב</strong><span>לוח שנה · סטטיסטיקות</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SPLIT: EXERCISES -->
-<section class="sec">
-  <div class="wrap">
-    <div class="split">
-      <div class="split-img fi">
-        <img src="cropped/screen-exercises.png" alt="תרגילים" />
-      </div>
-      <div class="split-text">
-        <span class="sec-tag fi">בחר תרגיל</span>
-        <h2 class="sec-h2 fi">בוחרים מה מתאים עכשיו</h2>
-        <p class="sec-sub fi">בחרדה לא תמיד ברור מה יעזור. שישה תרגילים שונים, כל אחד מסביר בדיוק מה הוא עושה, ואתה בוחר מה נכון ברגע הזה.</p>
-        <ul class="split-list fi d1">
-          <li><strong>נשימה</strong>, מאטה את הדופק ומחזירה תחושת שליטה</li>
-          <li><strong>תרגילי הידוק</strong>, כיווץ והרפיה שמורידים מתח מהגוף</li>
-          <li><strong>5-4-3-2-1</strong>, עיגון חושי בעזרת מה שרואים, נוגעים ושומעים <span class="split-tag">פרימיום</span></li>
-          <li><strong>ספירה</strong>, ספירה קוגניטיבית מ-0 עד 100 שמסיחה ממחשבות מציפות <span class="split-tag">פרימיום</span></li>
-          <li><strong>צבעים</strong>, איתור פריטים בצבע מסוים בסביבה <span class="split-tag">פרימיום</span></li>
-          <li><strong>מים קרים</strong>, שטיפת פנים קרה שמחזירה את הגוף לאיזון <span class="split-tag">פרימיום</span></li>
+    <div class="price-grid">
+      <div class="price-card fi">
+        <h3>חינם</h3>
+        <div class="price-big">₪0</div>
+        <ul class="price-list">
+          <li>תרגיל נשימה מונחה עם קריינות</li>
+          <li>ער"ן 1201 בלחיצה אחת</li>
+          <li>2 הודעות ביום בשיחה עם <bdi>AI</bdi></li>
         </ul>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- SPLIT: BREATHING -->
-<section class="sec sec-dark">
-  <div class="wrap">
-    <div class="split rev">
-      <div class="split-text">
-        <span class="sec-tag fi">שלב הנשימה</span>
-        <h2 class="sec-h2 fi">הגוף חוזר לקצב</h2>
-        <p class="sec-sub fi">120 נקודות במבנה פיבונאצ'י מתרחבות בשאיפה ומתכווצות בנשיפה. 12 מחזורים, 4 שניות פנימה ו-6 שניות החוצה, ומערכת העצבים מתחילה להירגע. כל שלב מלווה בקריינות עברית.</p>
-      </div>
-      <div class="split-img fi d1">
-        <img src="cropped/screen-breath.png" alt="נשימה" />
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SPLIT: PHYSICAL -->
-<section class="sec">
-  <div class="wrap">
-    <div class="split">
-      <div class="split-img fi">
-        <img src="cropped/screen-physical.png" alt="תרגיל פיזי" />
-      </div>
-      <div class="split-text">
-        <span class="sec-tag fi">תרגילים פיזיים</span>
-        <h2 class="sec-h2 fi">לחץ פיזי<br>במקום לחץ נפשי</h2>
-        <p class="sec-sub fi">כיווץ והרפיה שולחים לגוף אות: הסכנה עברה. שלושה תרגילים קצרים (כפות ידיים, כפות רגליים, כתפיים) מונחים בקול עם ספירה לאחור.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SPLIT: SUPPORT -->
-<section class="sec sec-dark">
-  <div class="wrap">
-    <div class="split rev">
-      <div class="split-text">
-        <span class="sec-tag fi">מסך תמיכה</span>
-        <h2 class="sec-h2 fi">ברגע שקשה,<br>הכל כבר מוכן.</h2>
-        <p class="sec-sub fi">ברגע הקשה לא מחפשים מספרים. מגדירים מראש, קו ער"ן, מישהו לצלצל אליו, שיר שעוזר, ולוחצים ברגע האמת.</p>
-        <ul class="split-list fi d1">
-          <li>קו <strong>ער"ן 1201</strong>, תמיכה נפשית 24/7, חינמית</li>
-          <li>עד שני <strong>אנשי קשר חירום</strong> שתגדיר בעצמך</li>
-          <li><strong>שיר מרגיע</strong> מ-YouTube או Spotify, מופעל מיד</li>
+      <div class="price-card premium fi d1">
+        <span class="price-badge">7 ימים מתנה</span>
+        <h3>פרימיום</h3>
+        <div class="plans">
+          <div class="plan"><span class="plan-name">חודשי</span><span class="plan-price">₪29.90</span><span class="plan-per">לחודש</span></div>
+          <div class="plan"><span class="plan-name">3 חודשים</span><span class="plan-price">₪69.90</span><span class="plan-per">₪23 לחודש</span></div>
+          <div class="plan best"><span class="plan-flag">הכי משתלם</span><span class="plan-name">שנתי</span><span class="plan-price">₪179.90</span><span class="plan-per">₪15 לחודש</span></div>
+        </div>
+        <ul class="price-list">
+          <li>פרוטוקול ההרגעה המלא וכל 6 הטכניקות</li>
+          <li>שיחה עם <bdi>AI</bdi> ללא הגבלה</li>
+          <li>יומן מעקב, סיכום חודשי וייצוא כקובץ PDF</li>
+          <li>שני אנשי קשר לחירום ושיר מרגיע</li>
+          <li>מרחב רגיעה עם צלילים להרגעה ולשינה</li>
+          <li>גיבוי בענן וסנכרון בין מכשירים</li>
         </ul>
-      </div>
-      <div class="split-img fi d1">
-        <img src="cropped/screen-support.png" alt="תמיכה" />
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SPLIT: CHAT -->
-<section class="sec">
-  <div class="wrap">
-    <div class="split">
-      <div class="split-img fi">
-        <img src="cropped/screen-chat.png" alt="שיחת AI" />
-      </div>
-      <div class="split-text">
-        <span class="sec-tag fi">שיחה עם <bdi>AI</bdi></span>
-        <h2 class="sec-h2 fi">מישהו שמקשיב.<br>עכשיו.</h2>
-        <p class="sec-sub fi">שיחה שמרגישה אנושית, ה-<bdi>AI</bdi> מאשר את מה שאתה מרגיש, לא ממהר לפתרון, ומציע תרגיל נשימה ישירות בתוך השיחה כשצריך.</p>
-        <ul class="split-list fi d1">
-          <li><strong>בטיחות</strong>, אם עולה סימן למצוקה קשה, השיחה ננעלת ומפנה מיד לער"ן 1201 או 101</li>
-          <li><strong>פרטיות</strong>, השיחות לא נשמרות אצלנו בשרת</li>
-          <li><strong>זמינות</strong>, 2 הודעות ביום חינם, ללא הגבלה בפרימיום ובניסיון</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SPLIT: JOURNAL -->
-<section class="sec sec-dark">
-  <div class="wrap">
-    <div class="split rev">
-      <div class="split-text">
-        <span class="sec-tag fi">יומן מעקב</span>
-        <h2 class="sec-h2 fi">ימים טובים.<br>ימים קשים.<br>הדפוס מתגלה.</h2>
-        <p class="sec-sub fi">לוח שנה צבעוני, רצף ימים, סטטיסטיקות חודשיות, ובסוף החודש מבינים קצת יותר. ההערות מוצפנות AES-256 לפני שהן עוזבות את המכשיר.</p>
-      </div>
-      <div class="split-img fi d1">
-        <img src="cropped/screen-journal.png" alt="יומן" />
+        <p class="price-fine">המנוי מתחדש אוטומטית, ואפשר לבטל בכל רגע בהגדרות המנויים של App Store או Google Play.</p>
       </div>
     </div>
   </div>
@@ -784,29 +1011,86 @@
 <!-- TRUST -->
 <section class="sec" id="trust">
   <div class="wrap">
-    <span class="sec-tag fi">פרטיות</span>
-    <h2 class="sec-h2 fi">הנתונים שלך, נקודה.</h2>
-    <p class="sec-sub fi">בנינו את Stablue כך שגם אנחנו לא יכולים לקרוא את מה שאתה כותב.</p>
-    <div class="tcards">
+    <div class="center-head">
+      <span class="sec-tag fi">פרטיות</span>
+      <h2 class="sec-h2 fi">מה קורה למידע שלך</h2>
+      <p class="sec-sub c fi">מה שעובר עליך ברגעים קשים הוא הדבר הכי אישי שיש. ככה אנחנו שומרים עליו.</p>
+    </div>
+    <div class="tcards six">
       <div class="tc fi">
-        <em>🔐</em>
-        <h3>הצפנה AES-256</h3>
-        <p>הערות היומן מוצפנות לפני שיוצאות מהמכשיר. גם אם נרצה, אין לנו אפשרות לקרוא אותן.</p>
+        <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><rect x="9" y="11" width="6" height="4.5" rx="1"/><path d="M10.5 11V9.8a1.5 1.5 0 0 1 3 0V11"/></svg></div>
+        <h3>השיחות שלך נשארות שלך</h3>
+        <p>כל הודעה משמשת רק כדי לענות לך באותו רגע. אנחנו לא שומרים את השיחות בשרתים שלנו.</p>
       </div>
       <div class="tc fi d1">
-        <em>🗑️</em>
-        <h3>מחיקה מלאה</h3>
-        <p>לוחצים "מחיקת חשבון", כל הנתונים נמחקים מהשרת לצמיתות. בלי עיכוב, בלי שאלות.</p>
+        <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.2" r="1.3"/><path d="M12 16.5v1.5"/></svg></div>
+        <h3>היומן שלך מוצפן</h3>
+        <p>ההערות שכותבים ביומן מוצפנות כבר בטלפון, בתקן <bdi>AES-256</bdi>, עוד לפני שהן יוצאות לגיבוי בענן.</p>
       </div>
       <div class="tc fi d2">
-        <em>⚕️</em>
-        <h3>לא תחליף לטיפול</h3>
-        <p>Stablue היא כלי תמיכה עצמי. כשהמצוקה מתמשכת, חשוב לפנות לאיש מקצוע.</p>
+        <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/><path d="M3.5 3.5l17 17"/></svg></div>
+        <h3>בלי הרשמה, בלי פרטים</h3>
+        <p>אפשר להתחיל מיד כאורח, בלי אימייל ובלי סיסמה. במצב הזה היומן ואנשי הקשר לא יוצאים מהטלפון שלך.</p>
+      </div>
+      <div class="tc fi">
+        <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6L12 3z"/><path d="M8.8 12.2l2.2 2.2 4.3-4.6"/></svg></div>
+        <h3>המידע שלך לא למכירה</h3>
+        <p>אנחנו לא מוכרים מידע, לא מעבירים אותו למטרות שיווק, ואין באפליקציה פרסומות.</p>
+      </div>
+      <div class="tc fi d1">
+        <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><path d="M7 15h3"/></svg></div>
+        <h3>תשלום מאובטח דרך החנות</h3>
+        <p>המנוי נרכש ישירות דרך <bdi>App Store</bdi> או <bdi>Google Play</bdi>. פרטי האשראי שלך נשארים אצלם ולא מגיעים אלינו.</p>
+      </div>
+      <div class="tc fi d2">
+        <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 7h15"/><path d="M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2"/><path d="M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12"/><path d="M10 11v6M14 11v6"/></svg></div>
+        <h3>השליטה בידיים שלך</h3>
+        <p>מוחקים את החשבון בלחיצה, וכל המידע נמחק מהשרתים שלנו: היומן, הגדרות התמיכה והחשבון עצמו. גם בהתנתקות, הנתונים נמחקים מהטלפון.</p>
       </div>
     </div>
-    <div class="disclaimer fi">
-      <strong>הבהרה:</strong> Stablue אינה אפליקציה רפואית ואינה מחליפה אבחון, ייעוץ או טיפול פסיכולוגי / פסיכיאטרי.
-      במצוקה חמורה, פנה/י לאיש מקצוע או לקו ער"ן: <strong>1201</strong> &nbsp;·&nbsp; חירום: <strong>101</strong>
+    <p class="trust-link fi"><a href="https://stablue-app.github.io/stablue-legal" target="_blank" rel="noopener">למדיניות הפרטיות המלאה ←</a></p>
+    <div class="disclaimer fi" role="note">
+      <div class="disc-head">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <strong>חשוב לדעת</strong>
+      </div>
+      <p>Stablue היא כלי לעזרה עצמית, ואינה מחליפה אבחון, ייעוץ או טיפול פסיכולוגי או פסיכיאטרי. במצוקה חמורה, חשוב לפנות לאיש מקצוע.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec sec-dark" id="faq">
+  <div class="wrap">
+    <div class="center-head">
+      <span class="sec-tag fi">שאלות</span>
+      <h2 class="sec-h2 fi">שאלות נפוצות</h2>
+    </div>
+    <div class="faq">
+      <details class="fi">
+        <summary>האם Stablue מחליפה טיפול?</summary>
+        <p>לא. Stablue היא כלי לעזרה עצמית ברגעים קשים, ולא תחליף לאבחון או לטיפול מקצועי. כשהמצוקה נמשכת, חשוב לפנות לאיש מקצוע.</p>
+      </details>
+      <details class="fi">
+        <summary>מה מקבלים בחינם?</summary>
+        <p>בהתקנה מקבלים 7 ימי פרימיום מלא, בלי כרטיס אשראי. אחריהם נשארים בחינם תרגיל הנשימה המונחה, חיוג לער"ן ושתי הודעות ביום בשיחה עם הבינה המלאכותית.</p>
+      </details>
+      <details class="fi">
+        <summary>צריך להירשם?</summary>
+        <p>לא חובה. אפשר להיכנס כאורח ולהתחיל מיד. הרשמה עם <bdi>Apple</bdi>, <bdi>Google</bdi> או אימייל מוסיפה גיבוי בענן וסנכרון בין מכשירים.</p>
+      </details>
+      <details class="fi">
+        <summary>איך מבטלים מנוי?</summary>
+        <p>בכל רגע, בהגדרות המנויים של App Store באייפון, או של Google Play באנדרואיד. הגישה לפרימיום נשארת עד סוף התקופה ששולמה.</p>
+      </details>
+      <details class="fi">
+        <summary>באילו שפות האפליקציה?</summary>
+        <p>עברית ואנגלית, כולל הקריינות בתרגילים. בוחרים שפה בפתיחה הראשונה, ואפשר להחליף בכל רגע בהגדרות.</p>
+      </details>
+      <details class="fi">
+        <summary>מה קורה אם כותבים לבינה המלאכותית משהו מדאיג?</summary>
+        <p>כשעולים בשיחה סימנים למצוקה קשה, השיחה ננעלת ובמקומה מוצגים כפתורי חיוג מהיר לער"ן ולמד"א, כדי להגיע לעזרה אנושית מהר.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -814,18 +1098,18 @@
 <!-- CTA -->
 <section class="sec cta-sec" id="download">
   <div class="wrap">
-    <span class="sec-tag fi">התחל/י</span>
-    <h2 class="sec-h2 fi">14 ימי ניסיון. חינמי.</h2>
-    <p class="sec-sub c fi">פותחים את האפליקציה, יש גישה מלאה לכל הפיצ'רים מהרגע הראשון. אחרי 14 יום, נשימה ותרגילי הידוק נשארים חינמיים לתמיד.</p>
-    <div class="dl-wrap fi">
-      <a href="https://apps.apple.com/app/id_PLACEHOLDER" class="dl-btn">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
-        <div class="dl-t">
-          <span class="dl-sm">הורדה חינמית ב-</span>
-          <span class="dl-lg">App Store</span>
-        </div>
+    <span class="sec-tag fi">הורדה</span>
+    <h2 class="sec-h2 fi">7 ימי פרימיום מתנה.<br>בלי כרטיס אשראי.</h2>
+    <p class="sec-sub c fi">זמינה לאייפון ולאנדרואיד, בעברית ובאנגלית.</p>
+    <div class="store-row fi">
+      <a href="https://apps.apple.com/il/app/id6771805032" class="store-btn" target="_blank" rel="noopener">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
+        <span class="store-t"><span class="store-sm">להורדה ב-</span><span class="store-lg">App Store</span></span>
       </a>
-      <p class="android-note">Android, בקרוב ב-Google Play</p>
+      <a href="https://play.google.com/store/apps/details?id=com.stablue.app" class="store-btn" target="_blank" rel="noopener">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="#34A853" d="M3.6 1.8 13.4 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1z"/><path fill="#FBBC04" d="m16.8 8.6 3.1 1.8c.9.5.9 1.8 0 2.3l-3.1 1.8-3.4-2.5 3.4-3.4z"/><path fill="#4285F4" d="M3.6 1.8c.3-.1.7-.1 1 .1l12.2 6.7-3.4 3.4L3.6 1.8z"/><path fill="#EA4335" d="m13.4 12 3.4 3.4-12.2 6.7c-.3.2-.7.2-1 .1L13.4 12z"/></svg>
+        <span class="store-t"><span class="store-sm">להורדה ב-</span><span class="store-lg">Google Play</span></span>
+      </a>
     </div>
   </div>
 </section>
@@ -842,7 +1126,8 @@
         <a href="https://stablue-app.github.io/stablue-legal" target="_blank">מדיניות פרטיות</a>
         <a href="https://stablue-app.github.io/stablue-legal/terms" target="_blank">תנאי שימוש</a>
         <a href="mailto:support@stablue.app">צור קשר</a>
-        <a href="https://apps.apple.com/app/id_PLACEHOLDER" target="_blank">App Store</a>
+        <a href="https://apps.apple.com/il/app/id6771805032" target="_blank" rel="noopener">App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=com.stablue.app" target="_blank" rel="noopener">Google Play</a>
       </div>
     </div>
     <div class="foot-copy">© 2026 Stablue · כל הזכויות שמורות · לא תחליף לטיפול מקצועי</div>
@@ -863,13 +1148,13 @@ navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDr
 
 // Infinite swipe carousel (mobile hero phones) — wraps around in both directions
 const mobImages = [
-  'cropped/screen-journal.png',
-  'cropped/screen-physical.png',
-  'cropped/screen-breath.png',
-  'cropped/screen-home.png',
-  'cropped/screen-chat.png',
-  'cropped/screen-support.png',
-  'cropped/screen-exercises.png',
+  'shots/framed/journal.png',
+  'shots/framed/physical.png',
+  'shots/framed/breath.png',
+  'shots/framed/home.png',
+  'shots/framed/chat.png',
+  'shots/framed/support.png',
+  'shots/framed/exercises.png',
 ];
 const mobSlotEls = [
   document.getElementById('mobImgM2'),
@@ -944,11 +1229,45 @@ mobCarousel.addEventListener('touchend', () => {
   dragDx = 0;
 });
 
+
+// Story section: the step nearest the reading line is active; pages before it are turned
+const storySteps = [...document.querySelectorAll('.story-step')];
+const storyCards = storySteps.map(s => s.querySelector('.ss-card'));
+const storyPages = [...document.querySelectorAll('.sp-page')];
+const storyDots = [...document.querySelectorAll('#storyDots i')];
+const storyPhone = document.getElementById('storyPhone');
+let storyActive = -1;
+function setStory(i) {
+  if (i === storyActive) return;
+  storyActive = i;
+  storySteps.forEach((s, k) => s.classList.toggle('active', k === i));
+  storyPages.forEach((p, k) => p.classList.toggle('turned', k < i));
+  storyDots.forEach((d, k) => d.classList.toggle('on', k === i));
+  const wide = window.innerWidth > 860;
+  storyPhone.style.setProperty('--tilt', wide ? (i % 2 ? '7deg' : '-7deg') : '0deg');
+}
+let storyTick = false;
+function updateStory() {
+  storyTick = false;
+  const wide = window.innerWidth > 860;
+  const line = window.innerHeight * (wide ? 0.5 : 0.8);
+  let best = 0, bestD = Infinity;
+  storyCards.forEach((c, k) => {
+    const r = c.getBoundingClientRect();
+    const d = Math.abs((r.top + r.bottom) / 2 - line);
+    if (d < bestD) { bestD = d; best = k; }
+  });
+  setStory(best);
+}
+window.addEventListener('scroll', () => { if (!storyTick) { storyTick = true; requestAnimationFrame(updateStory); } }, { passive: true });
+window.addEventListener('resize', () => { storyActive = -1; updateStory(); });
+updateStory();
+
 const io = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
 }, { threshold: 0.07 });
 document.querySelectorAll('.fi').forEach(el => io.observe(el));
-setTimeout(() => document.querySelectorAll('.hero .fi, .stats-bar .fi, .hero-h1 .word').forEach(el => el.classList.add('v')), 60);
+setTimeout(() => document.querySelectorAll('.hero .fi, .hero-h1 .word, .hero-sub').forEach(el => el.classList.add('v')), 60);
 </script>
 </body>
 </html>
