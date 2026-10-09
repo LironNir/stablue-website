@@ -74,6 +74,8 @@
     .nav-logo img { width: 100%; height: 100%; object-fit: cover; }
     .nav-name { font-size: 16px; font-weight: 900; letter-spacing: 3.5px; color: #fff; }
     .nav-right { display: flex; align-items: center; gap: 22px; }
+    @media (max-width: 1180px) { .nav-right { gap: 16px; } .nav-link { font-size: 12.5px; } }
+    @media (max-width: 900px) { .nav-right .nav-link { display: none; } nav .nav-burger { display: flex; } }
     .nav-link { font-size: 13px; color: var(--faint); text-decoration: none; transition: color .2s; }
     .nav-link:hover { color: #fff; }
     .nav-cta {
@@ -691,9 +693,13 @@
       .story-steps { position: relative; z-index: 2; padding: 2vh 0 30vh; }
       .story-step {
         min-height: 72vh; justify-content: flex-end; padding-bottom: 4vh;
-        opacity: 0; transform: translateY(24px);
+        opacity: 1; transform: none;
       }
-      .story-step.active { opacity: 1; transform: none; }
+      /* the part of a card that reaches the phone fades out under it, so the phone is never covered */
+      .story-step .ss-card {
+        -webkit-mask-image: linear-gradient(to bottom, transparent var(--cut, -100px), #000 calc(var(--cut, -100px) + 44px));
+        mask-image: linear-gradient(to bottom, transparent var(--cut, -100px), #000 calc(var(--cut, -100px) + 44px));
+      }
       .story-step > * { position: relative; }
       .story-step .ss-card {
         background: rgba(10,12,44,.82); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -712,6 +718,22 @@
       .store-btn::before, .story-glow { animation: none; }
     }
     .ss-card { display: flex; flex-direction: column; }
+
+    /* ── Reviews ── */
+    .rv-score { display: inline-flex; align-items: center; gap: 12px; margin-top: 6px; padding: 10px 20px; border-radius: 50px;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,200,90,.28); }
+    .rv-num { font-size: 22px; font-weight: 900; color: #fff; }
+    .rv-of { font-size: 13.5px; color: var(--muted); }
+    .rv-stars { display: inline-flex; gap: 3px; color: #FFC85A; filter: drop-shadow(0 0 8px rgba(255,200,90,.35)); }
+    .rv-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+    .rv {
+      margin: 0; padding: 26px 22px 22px; border-radius: 22px; display: flex; flex-direction: column; gap: 14px;
+      background: linear-gradient(160deg, rgba(255,200,90,.06), var(--card) 45%); border: 1px solid var(--bdr);
+    }
+    .rv blockquote { margin: 0; font-size: 16.5px; line-height: 1.7; color: #fff; font-weight: 500; flex: 1; }
+    .rv figcaption { font-size: 12.5px; color: var(--faint); }
+    @media (max-width: 1100px) { .rv-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 560px) { .rv-grid { grid-template-columns: 1fr; } .rv-score { flex-wrap: wrap; justify-content: center; } #reviews .sec-h2 br { display: none; } }
 
     bdi { white-space: nowrap; }
     .tcards.six { grid-template-columns: repeat(3,1fr); margin-top: 0; }
@@ -773,6 +795,123 @@
       html[dir="ltr"] .story-step { transform: translateX(14px); }
       html[dir="ltr"] .story-step.active { transform: none; }
     }
+
+    /* ══════════════════════════════════
+       MOBILE POLISH (phones only, desktop untouched)
+    ══════════════════════════════════ */
+    .mbar { display: none; }
+    @media (max-width: 860px) {
+      .story-phone { --ph-h: min(44vh, 420px); }
+      .story-step { min-height: 54vh; padding-bottom: 3vh; }
+      .story-step .ss-card { padding: 18px 18px 20px; }
+      .story-step h3 { font-size: 22px; margin-bottom: 10px; }
+      .story-step p { font-size: 15px; line-height: 1.7; }
+      .ss-list { margin-top: 12px; gap: 8px; }
+      .ss-list li { font-size: 14px; line-height: 1.55; }
+      .ss-tag { margin-top: 14px; }
+    }
+    @media (max-width: 860px) and (max-height: 740px) {
+      .story-phone { --ph-h: 36vh; }
+      .story-stage { padding-top: 8px; gap: 8px; }
+      .story-step .ss-card { padding: 16px 16px 18px; }
+      .story-step h3 { font-size: 20px; }
+      .story-step p { font-size: 14px; }
+      .ss-list li { font-size: 13.5px; }
+    }
+    @media (max-width: 560px) {
+      /* hero: smaller brand block so the headline and buttons sit higher */
+      .hero { min-height: auto; padding: 84px 0 36px; }
+      .hero-brand-row { gap: 14px; margin-bottom: 16px; }
+      .hero-s-icon { width: 64px; height: 64px; border-radius: 16px; }
+      .hero-brand-name { font-size: 30px; letter-spacing: 6px; }
+      .hero-brand-sub { font-size: 10.5px; letter-spacing: 4px; margin-top: 5px; }
+      .feat-col strong { font-size: 13.5px; }
+      .feat-col span { font-size: 12px; line-height: 1.5; }
+      .hero-note { font-size: 12.5px; }
+      .store-sm { font-size: 11.5px; }
+      /* tighter sections, readable labels */
+      .sec { padding: 60px 0; }
+      .sec-tag { font-size: 12px; letter-spacing: 3px; }
+      .center-head { margin-bottom: 36px; }
+      /* bigger touch targets in the nav */
+      .lang-btn { height: 40px; }
+      .nav-burger { width: 40px; height: 40px; }
+      /* reviews: swipe sideways instead of a long stack */
+      .rv-grid {
+        display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+        margin: 0 -28px; padding: 4px 28px 16px; scroll-padding: 0 28px; scrollbar-width: none;
+      }
+      .rv-grid::-webkit-scrollbar { display: none; }
+      .rv { flex: 0 0 84%; scroll-snap-align: center; }
+      .rv-hint { display: block; text-align: center; font-size: 12.5px; color: var(--faint); margin-top: 4px; }
+      /* privacy: compact rows, icon beside the text */
+      .tcards.six { gap: 10px; }
+      .tc { display: grid; grid-template-columns: 48px 1fr; column-gap: 14px; align-items: start; text-align: start; padding: 18px; }
+      .tc-ico { grid-row: span 2; width: 48px; height: 48px; margin: 0; border-radius: 15px; }
+      .tc h3 { font-size: 16px; margin-bottom: 4px; }
+      .tc p { font-size: 14px; line-height: 1.6; }
+      /* pricing */
+      .price-card { padding: 28px 20px; }
+      .plan-flag { font-size: 11px; }
+      .plan-per { font-size: 12px; }
+      /* footer: links big enough to tap */
+      .foot-links { gap: 2px 4px; }
+      .foot-links a { padding: 10px 8px; font-size: 14px; }
+      .foot-copy { font-size: 12px; }
+      footer { padding-bottom: 92px; }
+      /* floating download bar */
+      .mbar {
+        display: flex; position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 880;
+        align-items: center; gap: 12px; padding: 10px 12px; border-radius: 20px;
+        background: rgba(14,12,48,.88); backdrop-filter: blur(20px) saturate(140%); -webkit-backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(160,130,255,.3); box-shadow: 0 18px 50px rgba(0,0,0,.45);
+        transform: translateY(140%); opacity: 0; visibility: hidden;
+        transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .3s, visibility 0s linear .45s;
+      }
+      .mbar.show { transform: none; opacity: 1; visibility: visible; transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .3s; }
+      .mbar-ico { width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0; }
+      .mbar-t { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.3; }
+      .mbar-t b { font-size: 15px; font-weight: 800; color: #fff; }
+      .mbar-t span { font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .mbar-btn {
+        flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px; border-radius: 14px;
+        font-size: 14.5px; font-weight: 800; color: #fff; text-decoration: none;
+        background: linear-gradient(135deg,#6318CC,#8B2EF5); box-shadow: 0 6px 22px rgba(130,46,245,.5);
+      }
+    }
+    .rv-hint { display: none; }
+
+
+
+    /* ── Page-flip extras, phones only (desktop keeps its original flip) ── */
+    .sp-sweep { display: none; }
+    @media (max-width: 860px) {
+      .sp-screen { perspective: 1100px; }
+      .sp-screen { clip-path: inset(0 round calc(var(--ph-h) * .07)); }
+      body::after { display: none; }
+      html, body { overflow-x: clip; }
+      .sp-sweep { display: block; }
+      .sp-page.current { animation: pageReveal .95s cubic-bezier(.2,.7,.2,1) both; }
+      @keyframes pageReveal { from { filter: brightness(.5); transform: scale(.965); } to { filter: none; transform: none; } }
+      .sp-sweep {
+        position: absolute; inset: 0; z-index: 45; pointer-events: none; opacity: 0;
+        background: linear-gradient(100deg, transparent 38%, rgba(190,210,255,.22) 47%, rgba(255,255,255,.32) 50%, rgba(190,210,255,.22) 53%, transparent 62%);
+        background-size: 300% 100%; background-repeat: no-repeat;
+      }
+      .sweeping .sp-sweep { animation: sweepRTL .95s cubic-bezier(.4,0,.2,1); }
+      .sweeping.back .sp-sweep { animation-name: sweepLTR; }
+      html[dir="ltr"] .sweeping .sp-sweep { animation-name: sweepLTR; }
+      html[dir="ltr"] .sweeping.back .sp-sweep { animation-name: sweepRTL; }
+      @keyframes sweepRTL { 0% { background-position: 0% 0; opacity: 0; } 20% { opacity: 1; } 100% { background-position: 100% 0; opacity: 0; } }
+      @keyframes sweepLTR { 0% { background-position: 100% 0; opacity: 0; } 20% { opacity: 1; } 100% { background-position: 0% 0; opacity: 0; } }
+      .story-phone.lift { animation: phoneLift .85s cubic-bezier(.3,.7,.3,1); }
+      @keyframes phoneLift { 0% { scale: 1; } 38% { scale: 1.035; } 100% { scale: 1; } }
+      .story-phone.lift + .story-dots i.on { animation: dotPop .5s ease; }
+      @keyframes dotPop { 50% { transform: scaleY(1.6); } }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .sp-page.current, .sweeping .sp-sweep, .story-phone.lift { animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -787,6 +926,8 @@
     <a href="#story" class="nav-link" data-i18n="nav.how">איך זה עובד</a>
     <a href="#pricing" class="nav-link" data-i18n="nav.pricing">מחירים</a>
     <a href="#faq" class="nav-link" data-i18n="nav.faq">שאלות</a>
+    <a href="https://stablue-app.github.io/stablue-legal/" data-href-en="https://stablue-app.github.io/stablue-legal/index-en.html" class="nav-link" target="_blank" rel="noopener" data-i18n="nav.policy">מדיניות פרטיות</a>
+    <a href="https://stablue-app.github.io/stablue-legal/terms/" data-href-en="https://stablue-app.github.io/stablue-legal/terms/terms-en.html" class="nav-link" target="_blank" rel="noopener" data-i18n="nav.terms">תנאי שימוש</a>
     <a href="#download" class="nav-cta">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
       <span data-i18n="nav.download">הורדה</span>
@@ -807,6 +948,8 @@
   <a href="#pricing" data-i18n="nav.pricing">מחירים</a>
   <a href="#trust" data-i18n="nav.privacy">פרטיות</a>
   <a href="#faq" data-i18n="nav.faq">שאלות</a>
+  <a href="https://stablue-app.github.io/stablue-legal/" data-href-en="https://stablue-app.github.io/stablue-legal/index-en.html" target="_blank" rel="noopener" data-i18n="nav.policy">מדיניות פרטיות</a>
+  <a href="https://stablue-app.github.io/stablue-legal/terms/" data-href-en="https://stablue-app.github.io/stablue-legal/terms/terms-en.html" target="_blank" rel="noopener" data-i18n="nav.terms">תנאי שימוש</a>
   <a href="#download" class="nav-cta">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
       <span data-i18n="nav.download">הורדה</span>
@@ -869,7 +1012,7 @@
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.16Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.16Z"/></svg>
             <strong data-i18n="feat2.t">פרוטוקול הרגעה</strong>
-            <span data-i18n="feat2.d">מודרך בקול, צעד אחרי צעד</span>
+            <span data-i18n="feat2.d">ויסות נשימה, הרפיית שרירים, עיגון חושי ועוד</span>
           </div>
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="8" cy="10.5" r=".8" fill="currentColor"/><circle cx="12" cy="10.5" r=".8" fill="currentColor"/><circle cx="16" cy="10.5" r=".8" fill="currentColor"/></svg>
@@ -922,6 +1065,7 @@
             <img class="sp-page" style="--i:4" src="shots/chat.jpg" alt="שיחה עם AI" data-i18n-alt="alt4" loading="lazy" />
             <img class="sp-page" style="--i:5" src="shots/journal.jpg" alt="יומן מעקב" data-i18n-alt="alt5" loading="lazy" />
             <img class="sp-page" style="--i:6" src="shots/support.jpg" alt="מסך תמיכה" data-i18n-alt="alt6" loading="lazy" />
+            <div class="sp-sweep" aria-hidden="true"></div>
             <div class="sp-glare" aria-hidden="true"></div>
           </div>
           <div class="sp-island" aria-hidden="true"></div>
@@ -1025,6 +1169,40 @@
   </div>
 </section>
 
+<!-- REVIEWS: real App Store reviews, quoted as written -->
+<section class="sec" id="reviews">
+  <div class="wrap">
+    <div class="center-head">
+      <span class="sec-tag fi" data-i18n="rv.tag">מה אומרים המשתמשים</span>
+      <h2 class="sec-h2 fi" data-i18n="rv.h2">משתמשים מספרים שהאפליקציה <br>עזרה להם להירגע בזמן חרדה.</h2>
+      <div class="rv-score fi"><span class="rv-num">5.0</span><div class="rv-stars" aria-label="5 כוכבים"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg></div><span class="rv-of" data-i18n="rv.score">דירוג ממוצע ב-App Store</span></div>
+    </div>
+    <div class="rv-grid">
+      <figure class="rv fi">
+        <div class="rv-stars" aria-label="5 כוכבים"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg></div>
+        <blockquote data-i18n="rv1.q">״לא האמנתי שהאפליקציה יכולה באמת לעזור, אבל הופתעתי לטובה. היא קלה לשימוש, נעימה ובאמת עזרה לי להירגע בזמן חרדה.״</blockquote>
+        <figcaption data-i18n="rv.src">ביקורת ב-App Store</figcaption>
+      </figure>
+      <figure class="rv fi d1">
+        <div class="rv-stars" aria-label="5 כוכבים"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg></div>
+        <blockquote data-i18n="rv2.q">״עזרה לי להירגע ולהתמודד בזמן חרדה, ממליץ בחום״</blockquote>
+        <figcaption data-i18n="rv.src">ביקורת ב-App Store</figcaption>
+      </figure>
+      <figure class="rv fi d2">
+        <div class="rv-stars" aria-label="5 כוכבים"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg></div>
+        <blockquote data-i18n="rv3.q">״החזירה אותי לחיים״</blockquote>
+        <figcaption data-i18n="rv.src">ביקורת ב-App Store</figcaption>
+      </figure>
+      <figure class="rv fi d3">
+        <div class="rv-stars" aria-label="5 כוכבים"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg></div>
+        <blockquote data-i18n="rv4.q">״אהבתי ממש ממליצה לכל מי שמתמודד עם חרדה״</blockquote>
+        <figcaption data-i18n="rv.src">ביקורת ב-App Store</figcaption>
+      </figure>
+    </div>
+    <p class="rv-hint" data-i18n="rv.hint">החליקו לעוד ביקורות</p>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section class="sec sec-dark" id="pricing">
   <div class="wrap">
@@ -1052,7 +1230,7 @@
           <div class="plan best"><span class="plan-flag">הכי משתלם</span><span class="plan-name">שנתי</span><span class="plan-price">₪179.90</span><span class="plan-per">₪15 לחודש</span></div>
         </div>
         <ul class="price-list">
-          <li>פרוטוקול ההרגעה המלא וכל 6 הטכניקות</li>
+          <li>פרוטוקול ההרגעה המלא וכל תרגילי ההרגעה</li>
           <li>שיחה עם <bdi>AI</bdi> ללא הגבלה</li>
           <li>יומן מעקב, סיכום חודשי וייצוא כקובץ PDF</li>
           <li>שני אנשי קשר לחירום ושיר מרגיע</li>
@@ -1082,7 +1260,7 @@
       <div class="tc fi d1">
         <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.2" r="1.3"/><path d="M12 16.5v1.5"/></svg></div>
         <h3 data-i18n="tc2.t">היומן שלך מוצפן</h3>
-        <p data-i18n="tc2.d">ההערות שכותבים ביומן מוצפנות כבר בטלפון, בתקן <bdi>AES-256</bdi>, עוד לפני שהן יוצאות לגיבוי בענן.</p>
+        <p data-i18n="tc2.d">ההערות שכותבים ביומן מוצפנות בתקן <bdi>AES-256</bdi> כבר בטלפון, עוד לפני שהן יוצאות לגיבוי בענן.</p>
       </div>
       <div class="tc fi d2">
         <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/><path d="M3.5 3.5l17 17"/></svg></div>
@@ -1125,28 +1303,32 @@
     </div>
     <div class="faq">
       <details class="fi" data-i18n="faq1">
-        <summary>האם Stablue מחליפה טיפול?</summary>
-        <p>לא. Stablue היא כלי לעזרה עצמית ברגעים קשים, ולא תחליף לאבחון או לטיפול מקצועי. כשהמצוקה נמשכת, חשוב לפנות לאיש מקצוע.</p>
+        <summary>מה עושים כשמתחיל התקף וקשה לחשוב?</summary>
+        <p>לוחצים על <bdi>START</bdi> במסך הראשי, ומשם כבר לא צריך להחליט כלום. קול רגוע מוביל אותך שלב אחרי שלב, והפרוטוקול מתקדם לבד, עד שהגוף נרגע.</p>
       </details>
       <details class="fi" data-i18n="faq2">
-        <summary>מה מקבלים בחינם?</summary>
-        <p>בהתקנה מקבלים 7 ימי פרימיום מלא, בלי כרטיס אשראי. אחריהם נשארים בחינם תרגיל הנשימה המונחה, חיוג לער"ן ושתי הודעות ביום בשיחה עם הבינה המלאכותית.</p>
+        <summary>כמה זמן זה לוקח?</summary>
+        <p>זה תלוי בך. חלק מהתרגילים מתוזמנים, כמו הנשימה ותרגילי הלחיצה, וחלק מתקדמים בקצב שלך. אפשר לעבור את כל הפרוטוקול, או לבחור תרגיל אחד מתפריט התרגילים כשצריך רק רגע.</p>
       </details>
       <details class="fi" data-i18n="faq3">
-        <summary>צריך להירשם?</summary>
-        <p>לא חובה. אפשר להיכנס כאורח ולהתחיל מיד. הרשמה עם <bdi>Apple</bdi>, <bdi>Google</bdi> או אימייל מוסיפה גיבוי בענן וסנכרון בין מכשירים.</p>
+        <summary>זה עובד גם בלי אינטרנט?</summary>
+        <p>כן. הפרוטוקול, התרגילים, היומן וצלילי הרגיעה עובדים גם בלי חיבור, במעלית, בטיסה או במקום בלי קליטה. רק השיחה עם הבינה המלאכותית צריכה אינטרנט.</p>
       </details>
       <details class="fi" data-i18n="faq4">
-        <summary>איך מבטלים מנוי?</summary>
-        <p>בכל רגע, בהגדרות המנויים של App Store באייפון, או של Google Play באנדרואיד. הגישה לפרימיום נשארת עד סוף התקופה ששולמה.</p>
+        <summary>במה Stablue שונה מאפליקציות מדיטציה?</summary>
+        <p>אפליקציות מדיטציה נבנו לתרגול ברגעים רגועים. Stablue נבנתה לרגע עצמו, ומרכזת במקום אחד את כל מה שצריך בזמן התקף חרדה: פרוטוקול הרגעה מלא, שיחה עם <bdi>AI</bdi>, חיוג מהיר לאיש קשר, שיר מרגיע, צלילי רגיעה ועוד. לא רק תרגיל נשימה.</p>
       </details>
       <details class="fi" data-i18n="faq5">
-        <summary>באילו שפות האפליקציה?</summary>
-        <p>עברית ואנגלית, כולל הקריינות בתרגילים. בוחרים שפה בפתיחה הראשונה, ואפשר להחליף בכל רגע בהגדרות.</p>
+        <summary>מי רואה את מה שאני כותב?</summary>
+        <p>מה שכותבים נשמר אצלך בטלפון, מוצפן ומאובטח. גם כשמתחברים לחשבון ומגבים בענן, הערות היומן מוצפנות בתקן <bdi>AES-256</bdi> עוד לפני שהן יוצאות מהטלפון, והשיחות עם הבינה המלאכותית לא נשמרות בשרתים שלנו. אנחנו לא מוכרים ולא משתפים מידע.</p>
       </details>
       <details class="fi" data-i18n="faq6">
-        <summary>מה קורה אם כותבים לבינה המלאכותית משהו מדאיג?</summary>
-        <p>כשעולים בשיחה סימנים למצוקה קשה, השיחה ננעלת ובמקומה מוצגים כפתורי חיוג מהיר לער"ן ולמד"א, כדי להגיע לעזרה אנושית מהר.</p>
+        <summary>אפשר להשתמש בה לצד טיפול?</summary>
+        <p>כן, והיא לא מחליפה אותו. אפשר אפילו לייצא את הסיכום החודשי של היומן כקובץ PDF ולהביא אותו לפגישה עם המטפל.</p>
+      </details>
+      <details class="fi" data-i18n="faq7">
+        <summary>מה כלול בחינם, ומה בפרימיום?</summary>
+        <p>כל מי שמוריד מקבל 7 ימי פרימיום מלא במתנה, בלי כרטיס אשראי. גם אחריהם נשארים בחינם, לתמיד: תרגיל הנשימה המודרך, חיוג לער"ן ושתי הודעות ביום לבינה המלאכותית. אם בוחרים במנוי, אפשר לבטל אותו בכל רגע בהגדרות של <bdi>App Store</bdi> או <bdi>Google Play</bdi>.</p>
       </details>
     </div>
   </div>
@@ -1171,6 +1353,13 @@
   </div>
 </section>
 
+<!-- Floating download bar (phones) -->
+<div class="mbar" id="mbar">
+  <img src="icon.png" alt="" class="mbar-ico" />
+  <div class="mbar-t"><b>Stablue</b><span data-i18n="mbar.sub">7 ימי פרימיום מתנה</span></div>
+  <a class="mbar-btn" id="mbarBtn" href="#download"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg><span data-i18n="nav.download">הורדה</span></a>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="wrap">
@@ -1182,7 +1371,7 @@
       <div class="foot-links">
         <a href="https://stablue-app.github.io/stablue-legal" data-href-en="https://stablue-app.github.io/stablue-legal/index-en.html" target="_blank" rel="noopener" data-i18n="ft.privacy">מדיניות פרטיות</a>
         <a href="https://stablue-app.github.io/stablue-legal/terms/" data-href-en="https://stablue-app.github.io/stablue-legal/terms/terms-en.html" target="_blank" rel="noopener" data-i18n="ft.terms">תנאי שימוש</a>
-        <a href="mailto:support@stablue.app" data-i18n="ft.contact">צור קשר</a>
+        <a href="mailto:lironnir100@gmail.com" data-i18n="ft.contact">צור קשר</a>
         <a href="https://apps.apple.com/il/app/id6771805032" data-href-en="https://apps.apple.com/app/id6771805032" target="_blank" rel="noopener">App Store</a>
         <a href="https://play.google.com/store/apps/details?id=com.stablue.app&amp;hl=iw" data-href-en="https://play.google.com/store/apps/details?id=com.stablue.app&amp;hl=en" target="_blank" rel="noopener">Google Play</a>
       </div>
@@ -1280,27 +1469,46 @@ mobCarousel.addEventListener('touchend', () => {
 });
 
 
-// Story section: the step nearest the reading line is active; pages before it are turned
+// Story section: the step nearest the reading line is active; pages before it are turned.
+// On phones the cards scroll naturally under the sticky phone; whatever part of a card
+// reaches the phone fades out under it, so the phone itself is never covered.
 const storySteps = [...document.querySelectorAll('.story-step')];
 const storyCards = storySteps.map(s => s.querySelector('.ss-card'));
 const storyPages = [...document.querySelectorAll('.sp-page')];
 const storyDots = [...document.querySelectorAll('#storyDots i')];
 const storyPhone = document.getElementById('storyPhone');
+const storyMQ = window.matchMedia('(max-width: 860px)');
 let storyActive = -1;
+let prevStory = -1;
 function setStory(i) {
   if (i === storyActive) return;
   storyActive = i;
   storySteps.forEach((s, k) => s.classList.toggle('active', k === i));
   storyPages.forEach((p, k) => p.classList.toggle('turned', k < i));
+  storyPages.forEach((p, k) => p.classList.toggle('current', k === i));
+  if (prevStory >= 0 && prevStory !== i) {
+    const scr = storyPhone.querySelector('.sp-screen');
+    storyPhone.classList.remove('lift'); scr.classList.remove('sweeping', 'back');
+    void storyPhone.offsetWidth;
+    storyPhone.classList.add('lift'); scr.classList.add('sweeping');
+    if (i < prevStory) scr.classList.add('back');
+  }
+  prevStory = i;
   storyDots.forEach((d, k) => d.classList.toggle('on', k === i));
-  const wide = window.innerWidth > 860;
-  storyPhone.style.setProperty('--tilt', wide ? (i % 2 ? '7deg' : '-7deg') : '0deg');
+  storyPhone.style.setProperty('--tilt', storyMQ.matches ? '0deg' : (i % 2 ? '7deg' : '-7deg'));
 }
 let storyTick = false;
 function updateStory() {
   storyTick = false;
-  const wide = window.innerWidth > 860;
-  const line = window.innerHeight * (wide ? 0.5 : 0.8);
+  const mobile = storyMQ.matches;
+  let line = window.innerHeight * 0.5;
+  if (mobile) {
+    const cut = document.getElementById('storyDots').getBoundingClientRect().bottom + 6;
+    storyCards.forEach(c => c.style.setProperty('--cut', (cut - c.getBoundingClientRect().top) + 'px'));
+    line = (cut + window.innerHeight) / 2;
+  } else {
+    storyCards.forEach(c => c.style.removeProperty('--cut'));
+  }
   let best = 0, bestD = Infinity;
   storyCards.forEach((c, k) => {
     const r = c.getBoundingClientRect();
@@ -1309,12 +1517,32 @@ function updateStory() {
   });
   setStory(best);
 }
+function layoutStory() { storyActive = -1; updateStory(); }
 window.addEventListener('scroll', () => { if (!storyTick) { storyTick = true; requestAnimationFrame(updateStory); } }, { passive: true });
-window.addEventListener('resize', () => { storyActive = -1; updateStory(); });
-updateStory();
+window.addEventListener('resize', layoutStory);
+layoutStory();
 
 // ── Language: Hebrew (default) / English ──
 const EN = {
+"nav.policy": "Privacy Policy",
+"nav.terms": "Terms of Use",
+"faq1": "\n        <summary>What do I do when an attack starts and it’s hard to think?</summary>\n        <p>Tap <bdi>START</bdi> on the main screen, and from there you don’t have to decide anything. A calm voice guides you step by step, and the protocol moves forward on its own until your body settles.</p>\n      ",
+"faq2": "\n        <summary>How long does it take?</summary>\n        <p>It depends on you. Some exercises are timed, like breathing and the press-and-release exercises, and others move at your own pace. You can go through the full protocol, or pick a single exercise from the menu when you just need a moment.</p>\n      ",
+"faq3": "\n        <summary>Does it work without internet?</summary>\n        <p>Yes. The protocol, the exercises, the journal and the calming sounds all work offline, in an elevator, on a flight or anywhere without signal. Only the AI chat needs a connection.</p>\n      ",
+"faq4": "\n        <summary>How is Stablue different from meditation apps?</summary>\n        <p>Meditation apps are built for practice in calm moments. Stablue is built for the moment itself, and brings together everything you need during an anxiety attack: a full calming protocol, AI chat, quick dial to a trusted contact, a calming song, relaxing sounds and more. Not just a breathing exercise.</p>\n      ",
+"faq5": "\n        <summary>Who can see what I write?</summary>\n        <p>What you write stays on your phone, encrypted and secure. Even when you sign in and back up to the cloud, your journal notes are encrypted with <bdi>AES-256</bdi> before they ever leave your phone, and AI conversations are not stored on our servers. We never sell or share your data.</p>\n      ",
+"faq6": "\n        <summary>Can I use it alongside therapy?</summary>\n        <p>Yes, and it doesn’t replace it. You can even export your monthly journal summary as a PDF and bring it to your next session.</p>\n      ",
+"faq7": "\n        <summary>What’s free, and what’s in Premium?</summary>\n        <p>Everyone who downloads gets 7 days of full Premium, no credit card required. After that, guided breathing, the ER’AN helpline and 2 AI messages a day stay free, for good. If you choose a subscription, you can cancel anytime in your <bdi>App Store</bdi> or <bdi>Google Play</bdi> settings.</p>\n      ",
+"rv.hint": "Swipe for more reviews",
+"mbar.sub": "7 days of Premium, on us",
+"rv.tag": "What users say",
+"rv.h2": "Users say the app helped them <br>calm down during anxiety.",
+"rv.score": "Average rating on the App Store",
+"rv.src": "App Store review, translated from Hebrew",
+"rv1.q": "“I didn’t believe an app could really help, but I was pleasantly surprised. It’s easy to use, pleasant, and it really helped me calm down during anxiety.”",
+"rv2.q": "“It helped me calm down and cope during anxiety, highly recommend”",
+"rv3.q": "“It brought me back to life”",
+"rv4.q": "“Really loved it, I recommend it to anyone dealing with anxiety”",
 "nav.how": "How it works",
 "nav.pricing": "Pricing",
 "nav.faq": "FAQ",
@@ -1328,7 +1556,7 @@ const EN = {
 "feat1.t": "Mood Journal",
 "feat1.d": "Track how you’re really doing",
 "feat2.t": "Calming protocol",
-"feat2.d": "Voice-guided, step by step",
+"feat2.d": "Paced breathing, muscle relaxation, sensory grounding and more",
 "feat3.t": "AI chat",
 "feat3.d": "Support that truly listens",
 "feat4.t": "Support screen",
@@ -1350,7 +1578,7 @@ const EN = {
 "pr.h2": "Start free. Upgrade when you’re ready.",
 "pr.sub": "Every new install comes with 7 days of Premium, no credit card needed. After that, guided breathing, the ER’AN helpline and 2 AI messages a day stay free.",
 "pr.free": "\n        <h3>Free</h3>\n        <div class=\"price-big\">₪0</div>\n        <ul class=\"price-list\">\n          <li>Guided breathing with narration</li>\n          <li>ER’AN 1201 in one tap</li>\n          <li>2 AI chat messages a day</li>\n        </ul>\n      ",
-"pr.prem": "\n        <span class=\"price-badge\">7 days free</span>\n        <h3>Premium</h3>\n        <div class=\"plans\">\n          <div class=\"plan\"><span class=\"plan-name\">Monthly</span><span class=\"plan-price\">₪29.90</span><span class=\"plan-per\">per month</span></div>\n          <div class=\"plan\"><span class=\"plan-name\">3 Months</span><span class=\"plan-price\">₪69.90</span><span class=\"plan-per\">₪23/mo</span></div>\n          <div class=\"plan best\"><span class=\"plan-flag\">Best value</span><span class=\"plan-name\">Annual</span><span class=\"plan-price\">₪179.90</span><span class=\"plan-per\">₪15/mo</span></div>\n        </div>\n        <ul class=\"price-list\">\n          <li>The full calming protocol and all 6 techniques</li>\n          <li>Unlimited AI chat</li>\n          <li>Mood Journal, monthly summary and PDF export</li>\n          <li>Two emergency contacts and a calming song</li>\n          <li>Calm Space sounds for relief and sleep</li>\n          <li>Cloud backup and sync across devices</li>\n        </ul>\n        <p class=\"price-fine\">Subscriptions renew automatically and can be canceled anytime in your App Store or Google Play subscription settings. Prices are shown in ILS; your store may show local pricing.</p>\n      ",
+"pr.prem": "\n        <span class=\"price-badge\">7 days free</span>\n        <h3>Premium</h3>\n        <div class=\"plans\">\n          <div class=\"plan\"><span class=\"plan-name\">Monthly</span><span class=\"plan-price\">₪29.90</span><span class=\"plan-per\">per month</span></div>\n          <div class=\"plan\"><span class=\"plan-name\">3 Months</span><span class=\"plan-price\">₪69.90</span><span class=\"plan-per\">₪23/mo</span></div>\n          <div class=\"plan best\"><span class=\"plan-flag\">Best value</span><span class=\"plan-name\">Annual</span><span class=\"plan-price\">₪179.90</span><span class=\"plan-per\">₪15/mo</span></div>\n        </div>\n        <ul class=\"price-list\">\n          <li>The full calming protocol and every calming exercise</li>\n          <li>Unlimited AI chat</li>\n          <li>Mood Journal, monthly summary and PDF export</li>\n          <li>Two emergency contacts and a calming song</li>\n          <li>Calm Space sounds for relief and sleep</li>\n          <li>Cloud backup and sync across devices</li>\n        </ul>\n        <p class=\"price-fine\">Subscriptions renew automatically and can be canceled anytime in your App Store or Google Play subscription settings. Prices are shown in ILS; your store may show local pricing.</p>\n      ",
 "tr.tag": "Privacy",
 "tr.h2": "What happens to your data",
 "tr.sub": "What you go through in hard moments is as personal as it gets. Here’s how we protect it.",
@@ -1371,12 +1599,6 @@ const EN = {
 "disc.d": "Stablue is a self-help tool and does not replace diagnosis, advice, or psychological or psychiatric treatment. In severe distress, it’s important to reach out to a professional.",
 "faq.tag": "Questions",
 "faq.h2": "Frequently asked questions",
-"faq1": "\n        <summary>Does Stablue replace therapy?</summary>\n        <p>No. Stablue is a self-help tool for hard moments, not a substitute for professional diagnosis or treatment. If the distress persists, it’s important to reach out to a professional.</p>\n      ",
-"faq2": "\n        <summary>What do I get for free?</summary>\n        <p>Every new install includes 7 days of full Premium, no credit card required. After that, guided breathing, the ER’AN helpline and 2 AI chat messages a day stay free.</p>\n      ",
-"faq3": "\n        <summary>Do I need to sign up?</summary>\n        <p>No. You can start right away as a guest. Signing in with <bdi>Apple</bdi>, <bdi>Google</bdi> or email adds cloud backup and sync across devices.</p>\n      ",
-"faq4": "\n        <summary>How do I cancel my subscription?</summary>\n        <p>Anytime, in your subscription settings in the App Store on iPhone or Google Play on Android. Premium stays active until the end of the period you’ve paid for.</p>\n      ",
-"faq5": "\n        <summary>Which languages does the app support?</summary>\n        <p>English and Hebrew, including the narration in the exercises. You choose a language the first time you open the app, and you can switch anytime in Settings.</p>\n      ",
-"faq6": "\n        <summary>What happens if I write something worrying to the AI?</summary>\n        <p>If the conversation shows signs of severe distress, the chat locks and shows quick-dial buttons for ER’AN and MDA instead, so you can reach a real person fast.</p>\n      ",
 "cta.tag": "Download",
 "cta.h2": "You don’t have to<br>face it alone.",
 "cta.sub": "7 days of Premium, on us, no credit card. For iPhone and Android, in English and Hebrew.",
@@ -1428,7 +1650,7 @@ function setLang(lang, persist) {
   langBtnLabel.textContent = en ? 'עב' : 'EN';
   langBtn.setAttribute('aria-label', en ? 'מעבר לעברית' : 'Switch to English');
   langBtn.title = en ? 'עברית' : 'English';
-  storyActive = -1; updateStory();
+  layoutStory();
   if (persist) {
     try { localStorage.setItem('stablue-lang', currentLang); } catch (e) {}
     try {
@@ -1444,6 +1666,29 @@ try {
 } finally {
   document.documentElement.classList.remove('lang-pending');
 }
+
+
+// ── Floating download bar (phones): after the hero, outside the story, away from the download section ──
+(function () {
+  const bar = document.getElementById('mbar');
+  const btn = document.getElementById('mbarBtn');
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/.test(ua);
+  btn.addEventListener('click', e => {
+    const store = isIOS ? '.hero .store-btn[href*="apple.com"]' : isAndroid ? '.hero .store-btn[href*="play.google"]' : null;
+    const a = store && document.querySelector(store);
+    if (a) { e.preventDefault(); window.open(a.getAttribute('href'), '_blank', 'noopener'); }
+  });
+  const hero = document.querySelector('.hero');
+  const watch = [document.getElementById('story'), document.getElementById('download')];
+  const visible = new Set();
+  let pastHero = false;
+  const apply = () => bar.classList.toggle('show', pastHero && visible.size === 0);
+  new IntersectionObserver(es => { pastHero = !es[0].isIntersecting; apply(); }).observe(hero);
+  const io2 = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)); apply(); }, { threshold: 0, rootMargin: '-90px 0px -90px 0px' });
+  watch.forEach(el => io2.observe(el));
+})();
 
 const io = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
