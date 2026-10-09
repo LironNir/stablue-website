@@ -4,11 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stablue: הדרך שלך לחזור לאיזון</title>
-  <meta name="description" content="אפליקציה לחרדה ולחץ בעברית ובאנגלית: פרוטוקול הרגעה מודרך, שיחה עם AI, יומן מעקב, מסך תמיכה וצלילי רגיעה. באייפון ובאנדרואיד." />
+  <meta name="description" id="metaDesc" content="אפליקציה לחרדה ולחץ בעברית ובאנגלית: פרוטוקול הרגעה מודרך, שיחה עם AI, יומן מעקב, מסך תמיכה וצלילי רגיעה. באייפון ובאנדרואיד." />
   <meta property="og:title" content="Stablue: הדרך שלך לחזור לאיזון" />
   <meta property="og:description" content="פרוטוקול הרגעה מודרך לרגעי חרדה, שיחה עם AI, יומן מעקב ומסך תמיכה. זמינה ב-App Store וב-Google Play." />
   <meta property="og:image" content="https://lironnir.github.io/stablue-website/icon.png" />
   <meta property="og:type" content="website" />
+  <script>
+    // Apply the saved/linked language before first paint, so English visitors never see a Hebrew flash.
+    (function () {
+      var l = null;
+      try { l = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+      if (!l) { try { l = localStorage.getItem('stablue-lang'); } catch (e) {} }
+      if (l === 'en') {
+        var h = document.documentElement;
+        h.lang = 'en'; h.dir = 'ltr'; h.classList.add('lang-pending');
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -717,6 +729,50 @@
     @media (max-width: 960px) { .tcards.six { grid-template-columns: repeat(2,1fr); } }
     @media (max-width: 860px) { .tcards.six { grid-template-columns: 1fr; } }
 
+
+    /* ══════════════════════════════════
+       LANGUAGE TOGGLE + ENGLISH (LTR)
+    ══════════════════════════════════ */
+    html.lang-pending body { visibility: hidden; }
+    .lang-btn {
+      display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 14px; border-radius: 50px; cursor: pointer;
+      font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: .6px; color: rgba(230,232,255,.92);
+      background: rgba(255,255,255,.04); border: 1px solid rgba(150,130,255,.28); transition: background .2s, border-color .2s, color .2s;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,.09); border-color: rgba(170,150,255,.5); color: #fff; }
+    .lang-btn svg { color: #7CF2DD; }
+    @media (max-width:560px) { .lang-btn { height: 36px; padding: 0 12px; } }
+
+    html[dir="ltr"] body { direction: ltr; text-align: left; }
+    html[dir="ltr"] .hero-grid { direction: rtl; }          /* text on the left, phones on the right */
+    html[dir="ltr"] .hero-grid > * { direction: ltr; }
+    html[dir="ltr"] .feat-col,
+    html[dir="ltr"] .store-sm { direction: ltr; }
+    html[dir="ltr"] .hero-h1 { letter-spacing: -1.5px; }
+    html[dir="ltr"] .story-grid { direction: rtl; }         /* text on the left, phone on the right */
+    html[dir="ltr"] .story-grid > * { direction: ltr; }
+    html[dir="ltr"] .sp-page { transform-origin: 0% 50%; }  /* pages turn like an English book */
+    html[dir="ltr"] .sp-page.turned { transform: rotateY(-112deg); }
+    html[dir="ltr"] .ss-list li { padding-right: 0; padding-left: 18px; }
+    html[dir="ltr"] .ss-list li::before { right: auto; left: 0; }
+    html[dir="ltr"] .price-list li { padding-right: 0; padding-left: 24px; }
+    html[dir="ltr"] .price-list li::before { right: auto; left: 0; }
+    html[dir="ltr"] .price-badge { left: auto; right: 20px; }
+    html[dir="ltr"] .note-ico { margin-left: 0; margin-right: 4px; }
+    html[dir="ltr"] .nav-drawer { right: auto; left: 0; border-left: 0; border-right: 1px solid rgba(130,80,255,.18); transform: translateX(-100%); }
+    html[dir="ltr"] .nav-drawer.open { transform: translateX(0); }
+    html[dir="ltr"] .cta-sec .sec-h2 { max-width: 680px; }
+    @media (min-width: 961px) {
+      html[dir="ltr"] .hero-right,
+      html[dir="ltr"] .hero-h1,
+      html[dir="ltr"] .hero-sub,
+      html[dir="ltr"] .hero-note { text-align: left; }
+      html[dir="ltr"] .hero-sub { margin: -10px auto 26px 0; }
+    }
+    @media (min-width: 861px) {
+      html[dir="ltr"] .story-step { transform: translateX(14px); }
+      html[dir="ltr"] .story-step.active { transform: none; }
+    }
   </style>
 </head>
 <body>
@@ -728,14 +784,15 @@
     <span class="nav-name">STABLUE</span>
   </a>
   <div class="nav-right">
-    <a href="#story" class="nav-link">איך זה עובד</a>
-    <a href="#pricing" class="nav-link">מחירים</a>
-    <a href="#faq" class="nav-link">שאלות</a>
+    <a href="#story" class="nav-link" data-i18n="nav.how">איך זה עובד</a>
+    <a href="#pricing" class="nav-link" data-i18n="nav.pricing">מחירים</a>
+    <a href="#faq" class="nav-link" data-i18n="nav.faq">שאלות</a>
     <a href="#download" class="nav-cta">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
-      הורדה
+      <span data-i18n="nav.download">הורדה</span>
     </a>
-    <button type="button" class="nav-burger" id="navBurger" aria-label="תפריט">
+    <button type="button" class="lang-btn" id="langBtn" aria-label="Switch to English" title="English"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/></svg><span id="langBtnLabel">EN</span></button>
+    <button type="button" class="nav-burger" id="navBurger" aria-label="תפריט" data-i18n-aria="aria.menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
   </div>
@@ -743,16 +800,16 @@
 
 <div class="nav-scrim" id="navScrim"></div>
 <div class="nav-drawer" id="navDrawer">
-  <button type="button" class="nav-drawer-close" id="navDrawerClose" aria-label="סגור">
+  <button type="button" class="nav-drawer-close" id="navDrawerClose" aria-label="סגור" data-i18n-aria="aria.close">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <a href="#story">איך זה עובד</a>
-  <a href="#pricing">מחירים</a>
-  <a href="#trust">פרטיות</a>
-  <a href="#faq">שאלות</a>
+  <a href="#story" data-i18n="nav.how">איך זה עובד</a>
+  <a href="#pricing" data-i18n="nav.pricing">מחירים</a>
+  <a href="#trust" data-i18n="nav.privacy">פרטיות</a>
+  <a href="#faq" data-i18n="nav.faq">שאלות</a>
   <a href="#download" class="nav-cta">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
-    הורדה
+      <span data-i18n="nav.download">הורדה</span>
   </a>
 </div>
 
@@ -796,47 +853,47 @@
 
         <span class="hero-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          כל הכלים להתמודדות עם חרדה, במקום אחד
+          <span data-i18n="hero.badge">כל הכלים להתמודדות עם חרדה, במקום אחד</span>
         </span>
 
-        <h1 class="hero-h1"><span class="word w1">הדרך</span> <span class="word w2">שלך</span><br><span class="word w3">לחזור</span> <span class="word w4 hl-bp">לאיזון.</span></h1>
-        <p class="hero-sub">התקף חרדה, לחץ או פאניקה? לוחצים <bdi>START</bdi>, ופרוטוקול הרגעה מודרך בקול מוביל אותך צעד אחרי צעד, עם נשימה, הרפיית שרירים ותרגילי קרקוע, עד שהגוף נרגע.</p>
+        <h1 class="hero-h1" data-i18n="hero.h1"><span class="word w1">הדרך</span> <span class="word w2">שלך</span><br><span class="word w3">לחזור</span> <span class="word w4 hl-bp">לאיזון.</span></h1>
+        <p class="hero-sub" data-i18n="hero.sub">התקף חרדה, לחץ או פאניקה? לוחצים <bdi>START</bdi>, ופרוטוקול הרגעה מודרך בקול מוביל אותך צעד אחרי צעד, עם נשימה, הרפיית שרירים ותרגילי קרקוע, עד שהגוף נרגע.</p>
 
         <!-- 4 feature icons horizontal row -->
         <div class="hero-feat-row">
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
-            <strong>יומן מעקב</strong>
-            <span>מעקב אישי אחר ההתקדמות</span>
+            <strong data-i18n="feat1.t">יומן מעקב</strong>
+            <span data-i18n="feat1.d">מעקב אישי אחר ההתקדמות</span>
           </div>
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.16Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.16Z"/></svg>
-            <strong>6 טכניקות הרגעה</strong>
-            <span>נשימה, הידוק, עיגון חושי ועוד</span>
+            <strong data-i18n="feat2.t">פרוטוקול הרגעה</strong>
+            <span data-i18n="feat2.d">מודרך בקול, צעד אחרי צעד</span>
           </div>
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="8" cy="10.5" r=".8" fill="currentColor"/><circle cx="12" cy="10.5" r=".8" fill="currentColor"/><circle cx="16" cy="10.5" r=".8" fill="currentColor"/></svg>
-            <strong>שיחה עם <bdi>AI</bdi></strong>
-            <span>תמיכה חכמה שמבינה</span>
+            <strong data-i18n="feat3.t">שיחה עם <bdi>AI</bdi></strong>
+            <span data-i18n="feat3.d">תמיכה חכמה שמבינה</span>
           </div>
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-            <strong>מסך תמיכה</strong>
-            <span>אנשי קשר, שיר מרגיע וקו ער"ן</span>
+            <strong data-i18n="feat4.t">מסך תמיכה</strong>
+            <span data-i18n="feat4.d">אנשי קשר, שיר מרגיע וקו ער"ן</span>
           </div>
         </div>
 
         <div class="store-row">
-          <a href="https://apps.apple.com/il/app/id6771805032" class="store-btn" target="_blank" rel="noopener">
+          <a href="https://apps.apple.com/il/app/id6771805032" data-href-en="https://apps.apple.com/app/id6771805032" class="store-btn" target="_blank" rel="noopener">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
-            <span class="store-t"><span class="store-sm">להורדה ב-</span><span class="store-lg">App Store</span></span>
+            <span class="store-t"><span class="store-sm" data-i18n="store.as">להורדה ב-</span><span class="store-lg">App Store</span></span>
           </a>
-          <a href="https://play.google.com/store/apps/details?id=com.stablue.app" class="store-btn" target="_blank" rel="noopener">
+          <a href="https://play.google.com/store/apps/details?id=com.stablue.app&amp;hl=iw" data-href-en="https://play.google.com/store/apps/details?id=com.stablue.app&amp;hl=en" class="store-btn" target="_blank" rel="noopener">
             <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#34A853" d="M3.6 1.8 13.4 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1z"/><path fill="#FBBC04" d="m16.8 8.6 3.1 1.8c.9.5.9 1.8 0 2.3l-3.1 1.8-3.4-2.5 3.4-3.4z"/><path fill="#4285F4" d="M3.6 1.8c.3-.1.7-.1 1 .1l12.2 6.7-3.4 3.4L3.6 1.8z"/><path fill="#EA4335" d="m13.4 12 3.4 3.4-12.2 6.7c-.3.2-.7.2-1 .1L13.4 12z"/></svg>
-            <span class="store-t"><span class="store-sm">להורדה ב-</span><span class="store-lg">Google Play</span></span>
+            <span class="store-t"><span class="store-sm" data-i18n="store.gp">להורדה ב-</span><span class="store-lg">Google Play</span></span>
           </a>
         </div>
-        <p class="hero-note"><svg class="note-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg> 7 ימי פרימיום מתנה · ללא כרטיס אשראי · עברית ואנגלית</p>
+        <p class="hero-note"><svg class="note-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg> <span data-i18n="hero.note">7 ימי פרימיום מתנה · ללא כרטיס אשראי · עברית ואנגלית</span></p>
 
       </div>
     </div>
@@ -847,9 +904,9 @@
 <section class="story" id="story">
   <div class="wrap">
     <div class="story-head">
-      <span class="sec-tag fi">איך זה עובד</span>
-      <h2 class="sec-h2 fi">כל מה שצריך ברגע קשה,<br>במקום אחד.</h2>
-      <p class="sec-sub c fi">גוללים, והטלפון מדפדף בין המסכים של האפליקציה.</p>
+      <span class="sec-tag fi" data-i18n="story.tag">איך זה עובד</span>
+      <h2 class="sec-h2 fi" data-i18n="story.h2">כל מה שצריך ברגע קשה,<br>במקום אחד.</h2>
+      <p class="sec-sub c fi" data-i18n="story.sub">גוללים, והטלפון מדפדף בין המסכים של האפליקציה.</p>
     </div>
     <div class="story-grid">
       <div class="story-stage">
@@ -858,13 +915,13 @@
           <div class="sp-btn sp-btn-a" aria-hidden="true"></div>
           <div class="sp-btn sp-btn-b" aria-hidden="true"></div>
           <div class="sp-screen">
-            <img class="sp-page" style="--i:0" src="shots/home.jpg" alt="מסך הבית של Stablue" />
-            <img class="sp-page" style="--i:1" src="shots/breath.jpg" alt="תרגיל נשימה מונחה" loading="lazy" />
-            <img class="sp-page" style="--i:2" src="shots/physical.jpg" alt="תרגיל לחיצה והרפיה" loading="lazy" />
-            <img class="sp-page" style="--i:3" src="shots/exercises.jpg" alt="תפריט התרגילים" loading="lazy" />
-            <img class="sp-page" style="--i:4" src="shots/chat.jpg" alt="שיחה עם AI" loading="lazy" />
-            <img class="sp-page" style="--i:5" src="shots/journal.jpg" alt="יומן מעקב" loading="lazy" />
-            <img class="sp-page" style="--i:6" src="shots/support.jpg" alt="מסך תמיכה" loading="lazy" />
+            <img class="sp-page" style="--i:0" src="shots/home.jpg" alt="מסך הבית של Stablue" data-i18n-alt="alt0" />
+            <img class="sp-page" style="--i:1" src="shots/breath.jpg" alt="תרגיל נשימה מונחה" data-i18n-alt="alt1" loading="lazy" />
+            <img class="sp-page" style="--i:2" src="shots/physical.jpg" alt="תרגיל לחיצה והרפיה" data-i18n-alt="alt2" loading="lazy" />
+            <img class="sp-page" style="--i:3" src="shots/exercises.jpg" alt="תפריט התרגילים" data-i18n-alt="alt3" loading="lazy" />
+            <img class="sp-page" style="--i:4" src="shots/chat.jpg" alt="שיחה עם AI" data-i18n-alt="alt4" loading="lazy" />
+            <img class="sp-page" style="--i:5" src="shots/journal.jpg" alt="יומן מעקב" data-i18n-alt="alt5" loading="lazy" />
+            <img class="sp-page" style="--i:6" src="shots/support.jpg" alt="מסך תמיכה" data-i18n-alt="alt6" loading="lazy" />
             <div class="sp-glare" aria-hidden="true"></div>
           </div>
           <div class="sp-island" aria-hidden="true"></div>
@@ -876,7 +933,7 @@
 
       <div class="story-steps">
         <article class="story-step">
-          <div class="ss-card">
+          <div class="ss-card" data-i18n="s1">
           <span class="ss-num">01</span>
           <h3>התקף חרדה? מתחילים מכאן</h3>
           <p>בעבודה, ברחוב או באמצע הלילה. לוחצים על <bdi>START</bdi>, וקול רגוע מוביל אותך צעד אחרי צעד, עד שהגוף נרגע.</p>
@@ -889,7 +946,7 @@
         </article>
 
         <article class="story-step">
-          <div class="ss-card">
+          <div class="ss-card" data-i18n="s2">
           <span class="ss-num">02</span>
           <h3>נושמים יחד, עד שהקצב חוזר</h3>
           <p>כשהלב דופק מהר והנשימה נתקעת, לא צריך לזכור מה לעשות. עוקבים אחרי העיגול: שואפים כשהוא גדל, נושפים כשהוא קטן, והקול סופר איתך.</p>
@@ -902,7 +959,7 @@
         </article>
 
         <article class="story-step">
-          <div class="ss-card">
+          <div class="ss-card" data-i18n="s3">
           <span class="ss-num">03</span>
           <h3>כשהגוף נדרך, מלמדים אותו להרפות</h3>
           <p>כתפיים מכווצות, ידיים קפוצות, רגליים שלא נחות. לוחצים חזק כמה שניות, משחררים, ומרגישים איך המתח יוצא.</p>
@@ -915,7 +972,7 @@
         </article>
 
         <article class="story-step">
-          <div class="ss-card">
+          <div class="ss-card" data-i18n="s4">
           <span class="ss-num">04</span>
           <h3>בוחרים את מה שעוזר לך</h3>
           <p>יש ימים שהנשימה מספיקה, ויש ימים שהמחשבות לא מפסיקות. בתפריט התרגילים בוחרים לבד, וכל תרגיל מסביר במשפט אחד איך הוא עוזר.</p>
@@ -929,7 +986,7 @@
         </article>
 
 <article class="story-step">
-          <div class="ss-card">
+          <div class="ss-card" data-i18n="s5">
           <span class="ss-num">05</span>
           <h3>כשצריך לדבר, יש מי שמקשיב</h3>
           <p>באמצע הלילה, בדרך לעבודה או רגע לפני פגישה. כותבים מה מרגישים, ומקבלים תשובה רגועה שלא שופטת, ולפעמים גם הצעה לתרגיל נשימה בתוך השיחה.</p>
@@ -942,7 +999,7 @@
         </article>
 
 <article class="story-step">
-          <div class="ss-card">
+          <div class="ss-card" data-i18n="s6">
           <span class="ss-num">06</span>
           <h3>ימים טובים, ימים קשים, והדפוס מתגלה</h3>
           <p>דקה ביום: יציב, תנודתי או לא יציב, ומשפט קצר אם רוצים. הלוח הצבעוני מראה את החודש במבט אחד, עם רצף הימים היציבים וסיכום חודשי שאפשר לייצא כקובץ PDF ולהביא לטיפול.</p>
@@ -951,7 +1008,7 @@
         </article>
 
         <article class="story-step">
-          <div class="ss-card">
+          <div class="ss-card" data-i18n="s7">
           <span class="ss-num">07</span>
           <h3>ברגע שקשה, הכל כבר מוכן</h3>
           <p>מגדירים מראש, ולוחצים ברגע האמת בלי לחפש מספרים.</p>
@@ -972,12 +1029,12 @@
 <section class="sec sec-dark" id="pricing">
   <div class="wrap">
     <div class="center-head">
-      <span class="sec-tag fi">מחירים</span>
-      <h2 class="sec-h2 fi">מתחילים בחינם. משדרגים כשרוצים.</h2>
-      <p class="sec-sub c fi">בהתקנה מקבלים 7 ימי פרימיום מתנה, בלי כרטיס אשראי. אחריהם, תרגיל הנשימה, ער"ן ושתי הודעות <bdi>AI</bdi> ביום נשארים בחינם.</p>
+      <span class="sec-tag fi" data-i18n="pr.tag">מחירים</span>
+      <h2 class="sec-h2 fi" data-i18n="pr.h2">מתחילים בחינם. משדרגים כשרוצים.</h2>
+      <p class="sec-sub c fi" data-i18n="pr.sub">בהתקנה מקבלים 7 ימי פרימיום מתנה, בלי כרטיס אשראי. אחריהם, תרגיל הנשימה, ער"ן ושתי הודעות <bdi>AI</bdi> ביום נשארים בחינם.</p>
     </div>
     <div class="price-grid">
-      <div class="price-card fi">
+      <div class="price-card fi" data-i18n="pr.free">
         <h3>חינם</h3>
         <div class="price-big">₪0</div>
         <ul class="price-list">
@@ -986,7 +1043,7 @@
           <li>2 הודעות ביום בשיחה עם <bdi>AI</bdi></li>
         </ul>
       </div>
-      <div class="price-card premium fi d1">
+      <div class="price-card premium fi d1" data-i18n="pr.prem">
         <span class="price-badge">7 ימים מתנה</span>
         <h3>פרימיום</h3>
         <div class="plans">
@@ -1012,49 +1069,49 @@
 <section class="sec" id="trust">
   <div class="wrap">
     <div class="center-head">
-      <span class="sec-tag fi">פרטיות</span>
-      <h2 class="sec-h2 fi">מה קורה למידע שלך</h2>
-      <p class="sec-sub c fi">מה שעובר עליך ברגעים קשים הוא הדבר הכי אישי שיש. ככה אנחנו שומרים עליו.</p>
+      <span class="sec-tag fi" data-i18n="tr.tag">פרטיות</span>
+      <h2 class="sec-h2 fi" data-i18n="tr.h2">מה קורה למידע שלך</h2>
+      <p class="sec-sub c fi" data-i18n="tr.sub">מה שעובר עליך ברגעים קשים הוא הדבר הכי אישי שיש. ככה אנחנו שומרים עליו.</p>
     </div>
     <div class="tcards six">
       <div class="tc fi">
         <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><rect x="9" y="11" width="6" height="4.5" rx="1"/><path d="M10.5 11V9.8a1.5 1.5 0 0 1 3 0V11"/></svg></div>
-        <h3>השיחות שלך נשארות שלך</h3>
-        <p>כל הודעה משמשת רק כדי לענות לך באותו רגע. אנחנו לא שומרים את השיחות בשרתים שלנו.</p>
+        <h3 data-i18n="tc1.t">השיחות שלך נשארות שלך</h3>
+        <p data-i18n="tc1.d">כל הודעה משמשת רק כדי לענות לך באותו רגע. אנחנו לא שומרים את השיחות בשרתים שלנו.</p>
       </div>
       <div class="tc fi d1">
         <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.2" r="1.3"/><path d="M12 16.5v1.5"/></svg></div>
-        <h3>היומן שלך מוצפן</h3>
-        <p>ההערות שכותבים ביומן מוצפנות כבר בטלפון, בתקן <bdi>AES-256</bdi>, עוד לפני שהן יוצאות לגיבוי בענן.</p>
+        <h3 data-i18n="tc2.t">היומן שלך מוצפן</h3>
+        <p data-i18n="tc2.d">ההערות שכותבים ביומן מוצפנות כבר בטלפון, בתקן <bdi>AES-256</bdi>, עוד לפני שהן יוצאות לגיבוי בענן.</p>
       </div>
       <div class="tc fi d2">
         <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/><path d="M3.5 3.5l17 17"/></svg></div>
-        <h3>בלי הרשמה, בלי פרטים</h3>
-        <p>אפשר להתחיל מיד כאורח, בלי אימייל ובלי סיסמה. במצב הזה היומן ואנשי הקשר לא יוצאים מהטלפון שלך.</p>
+        <h3 data-i18n="tc3.t">בלי הרשמה, בלי פרטים</h3>
+        <p data-i18n="tc3.d">אפשר להתחיל מיד כאורח, בלי אימייל ובלי סיסמה. במצב הזה היומן ואנשי הקשר לא יוצאים מהטלפון שלך.</p>
       </div>
       <div class="tc fi">
         <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6L12 3z"/><path d="M8.8 12.2l2.2 2.2 4.3-4.6"/></svg></div>
-        <h3>המידע שלך לא למכירה</h3>
-        <p>אנחנו לא מוכרים מידע, לא מעבירים אותו למטרות שיווק, ואין באפליקציה פרסומות.</p>
+        <h3 data-i18n="tc4.t">המידע שלך לא למכירה</h3>
+        <p data-i18n="tc4.d">אנחנו לא מוכרים מידע, לא מעבירים אותו למטרות שיווק, ואין באפליקציה פרסומות.</p>
       </div>
       <div class="tc fi d1">
         <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><path d="M7 15h3"/></svg></div>
-        <h3>תשלום מאובטח דרך החנות</h3>
-        <p>המנוי נרכש ישירות דרך <bdi>App Store</bdi> או <bdi>Google Play</bdi>. פרטי האשראי שלך נשארים אצלם ולא מגיעים אלינו.</p>
+        <h3 data-i18n="tc5.t">תשלום מאובטח דרך החנות</h3>
+        <p data-i18n="tc5.d">המנוי נרכש ישירות דרך <bdi>App Store</bdi> או <bdi>Google Play</bdi>. פרטי האשראי שלך נשארים אצלם ולא מגיעים אלינו.</p>
       </div>
       <div class="tc fi d2">
         <div class="tc-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 7h15"/><path d="M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2"/><path d="M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12"/><path d="M10 11v6M14 11v6"/></svg></div>
-        <h3>השליטה בידיים שלך</h3>
-        <p>מוחקים את החשבון בלחיצה, וכל המידע נמחק מהשרתים שלנו: היומן, הגדרות התמיכה והחשבון עצמו. גם בהתנתקות, הנתונים נמחקים מהטלפון.</p>
+        <h3 data-i18n="tc6.t">השליטה בידיים שלך</h3>
+        <p data-i18n="tc6.d">מוחקים את החשבון בלחיצה, וכל המידע נמחק מהשרתים שלנו: היומן, הגדרות התמיכה והחשבון עצמו. גם בהתנתקות, הנתונים נמחקים מהטלפון.</p>
       </div>
     </div>
-    <p class="trust-link fi"><a href="https://stablue-app.github.io/stablue-legal" target="_blank" rel="noopener">למדיניות הפרטיות המלאה ←</a></p>
+    <p class="trust-link fi"><a href="https://stablue-app.github.io/stablue-legal" data-href-en="https://stablue-app.github.io/stablue-legal/index-en.html" target="_blank" rel="noopener" data-i18n="tr.link">למדיניות הפרטיות המלאה ←</a></p>
     <div class="disclaimer fi" role="note">
       <div class="disc-head">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-        <strong>חשוב לדעת</strong>
+        <strong data-i18n="disc.t">חשוב לדעת</strong>
       </div>
-      <p>Stablue היא כלי לעזרה עצמית, ואינה מחליפה אבחון, ייעוץ או טיפול פסיכולוגי או פסיכיאטרי. במצוקה חמורה, חשוב לפנות לאיש מקצוע.</p>
+      <p data-i18n="disc.d">Stablue היא כלי לעזרה עצמית, ואינה מחליפה אבחון, ייעוץ או טיפול פסיכולוגי או פסיכיאטרי. במצוקה חמורה, חשוב לפנות לאיש מקצוע.</p>
     </div>
   </div>
 </section>
@@ -1063,31 +1120,31 @@
 <section class="sec sec-dark" id="faq">
   <div class="wrap">
     <div class="center-head">
-      <span class="sec-tag fi">שאלות</span>
-      <h2 class="sec-h2 fi">שאלות נפוצות</h2>
+      <span class="sec-tag fi" data-i18n="faq.tag">שאלות</span>
+      <h2 class="sec-h2 fi" data-i18n="faq.h2">שאלות נפוצות</h2>
     </div>
     <div class="faq">
-      <details class="fi">
+      <details class="fi" data-i18n="faq1">
         <summary>האם Stablue מחליפה טיפול?</summary>
         <p>לא. Stablue היא כלי לעזרה עצמית ברגעים קשים, ולא תחליף לאבחון או לטיפול מקצועי. כשהמצוקה נמשכת, חשוב לפנות לאיש מקצוע.</p>
       </details>
-      <details class="fi">
+      <details class="fi" data-i18n="faq2">
         <summary>מה מקבלים בחינם?</summary>
         <p>בהתקנה מקבלים 7 ימי פרימיום מלא, בלי כרטיס אשראי. אחריהם נשארים בחינם תרגיל הנשימה המונחה, חיוג לער"ן ושתי הודעות ביום בשיחה עם הבינה המלאכותית.</p>
       </details>
-      <details class="fi">
+      <details class="fi" data-i18n="faq3">
         <summary>צריך להירשם?</summary>
         <p>לא חובה. אפשר להיכנס כאורח ולהתחיל מיד. הרשמה עם <bdi>Apple</bdi>, <bdi>Google</bdi> או אימייל מוסיפה גיבוי בענן וסנכרון בין מכשירים.</p>
       </details>
-      <details class="fi">
+      <details class="fi" data-i18n="faq4">
         <summary>איך מבטלים מנוי?</summary>
         <p>בכל רגע, בהגדרות המנויים של App Store באייפון, או של Google Play באנדרואיד. הגישה לפרימיום נשארת עד סוף התקופה ששולמה.</p>
       </details>
-      <details class="fi">
+      <details class="fi" data-i18n="faq5">
         <summary>באילו שפות האפליקציה?</summary>
         <p>עברית ואנגלית, כולל הקריינות בתרגילים. בוחרים שפה בפתיחה הראשונה, ואפשר להחליף בכל רגע בהגדרות.</p>
       </details>
-      <details class="fi">
+      <details class="fi" data-i18n="faq6">
         <summary>מה קורה אם כותבים לבינה המלאכותית משהו מדאיג?</summary>
         <p>כשעולים בשיחה סימנים למצוקה קשה, השיחה ננעלת ובמקומה מוצגים כפתורי חיוג מהיר לער"ן ולמד"א, כדי להגיע לעזרה אנושית מהר.</p>
       </details>
@@ -1098,17 +1155,17 @@
 <!-- CTA -->
 <section class="sec cta-sec" id="download">
   <div class="wrap">
-    <span class="sec-tag fi">הורדה</span>
-    <h2 class="sec-h2 fi">7 ימי פרימיום מתנה.<br>בלי כרטיס אשראי.</h2>
-    <p class="sec-sub c fi">זמינה לאייפון ולאנדרואיד, בעברית ובאנגלית.</p>
+    <span class="sec-tag fi" data-i18n="cta.tag">הורדה</span>
+    <h2 class="sec-h2 fi" data-i18n="cta.h2">לא צריך להתמודד<br>עם זה לבד.</h2>
+    <p class="sec-sub c fi" data-i18n="cta.sub">7 ימי פרימיום מתנה, בלי כרטיס אשראי. לאייפון ולאנדרואיד, בעברית ובאנגלית.</p>
     <div class="store-row fi">
-      <a href="https://apps.apple.com/il/app/id6771805032" class="store-btn" target="_blank" rel="noopener">
+      <a href="https://apps.apple.com/il/app/id6771805032" data-href-en="https://apps.apple.com/app/id6771805032" class="store-btn" target="_blank" rel="noopener">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.18-1.15.38-2.35 1.05-3.11z"/></svg>
-        <span class="store-t"><span class="store-sm">להורדה ב-</span><span class="store-lg">App Store</span></span>
+        <span class="store-t"><span class="store-sm" data-i18n="store.as">להורדה ב-</span><span class="store-lg">App Store</span></span>
       </a>
-      <a href="https://play.google.com/store/apps/details?id=com.stablue.app" class="store-btn" target="_blank" rel="noopener">
+      <a href="https://play.google.com/store/apps/details?id=com.stablue.app&amp;hl=iw" data-href-en="https://play.google.com/store/apps/details?id=com.stablue.app&amp;hl=en" class="store-btn" target="_blank" rel="noopener">
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="#34A853" d="M3.6 1.8 13.4 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1z"/><path fill="#FBBC04" d="m16.8 8.6 3.1 1.8c.9.5.9 1.8 0 2.3l-3.1 1.8-3.4-2.5 3.4-3.4z"/><path fill="#4285F4" d="M3.6 1.8c.3-.1.7-.1 1 .1l12.2 6.7-3.4 3.4L3.6 1.8z"/><path fill="#EA4335" d="m13.4 12 3.4 3.4-12.2 6.7c-.3.2-.7.2-1 .1L13.4 12z"/></svg>
-        <span class="store-t"><span class="store-sm">להורדה ב-</span><span class="store-lg">Google Play</span></span>
+        <span class="store-t"><span class="store-sm" data-i18n="store.gp">להורדה ב-</span><span class="store-lg">Google Play</span></span>
       </a>
     </div>
   </div>
@@ -1123,14 +1180,14 @@
         <span class="foot-name">STABLUE</span>
       </div>
       <div class="foot-links">
-        <a href="https://stablue-app.github.io/stablue-legal" target="_blank">מדיניות פרטיות</a>
-        <a href="https://stablue-app.github.io/stablue-legal/terms" target="_blank">תנאי שימוש</a>
-        <a href="mailto:support@stablue.app">צור קשר</a>
-        <a href="https://apps.apple.com/il/app/id6771805032" target="_blank" rel="noopener">App Store</a>
-        <a href="https://play.google.com/store/apps/details?id=com.stablue.app" target="_blank" rel="noopener">Google Play</a>
+        <a href="https://stablue-app.github.io/stablue-legal" data-href-en="https://stablue-app.github.io/stablue-legal/index-en.html" target="_blank" rel="noopener" data-i18n="ft.privacy">מדיניות פרטיות</a>
+        <a href="https://stablue-app.github.io/stablue-legal/terms/" data-href-en="https://stablue-app.github.io/stablue-legal/terms/terms-en.html" target="_blank" rel="noopener" data-i18n="ft.terms">תנאי שימוש</a>
+        <a href="mailto:support@stablue.app" data-i18n="ft.contact">צור קשר</a>
+        <a href="https://apps.apple.com/il/app/id6771805032" data-href-en="https://apps.apple.com/app/id6771805032" target="_blank" rel="noopener">App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=com.stablue.app&amp;hl=iw" data-href-en="https://play.google.com/store/apps/details?id=com.stablue.app&amp;hl=en" target="_blank" rel="noopener">Google Play</a>
       </div>
     </div>
-    <div class="foot-copy">© 2026 Stablue · כל הזכויות שמורות · לא תחליף לטיפול מקצועי</div>
+    <div class="foot-copy" data-i18n="ft.copy">© 2026 Stablue · כל הזכויות שמורות · לא תחליף לטיפול מקצועי</div>
   </div>
 </footer>
 
@@ -1147,15 +1204,8 @@ navScrim.addEventListener('click', closeDrawer);
 navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
 
 // Infinite swipe carousel (mobile hero phones) — wraps around in both directions
-const mobImages = [
-  'shots/framed/journal.png',
-  'shots/framed/physical.png',
-  'shots/framed/breath.png',
-  'shots/framed/home.png',
-  'shots/framed/chat.png',
-  'shots/framed/support.png',
-  'shots/framed/exercises.png',
-];
+let mobBase = 'shots/framed/';
+const mobImages = ['journal', 'physical', 'breath', 'home', 'chat', 'support', 'exercises'];
 const mobSlotEls = [
   document.getElementById('mobImgM2'),
   document.getElementById('mobImgM1'),
@@ -1169,7 +1219,7 @@ function renderMobCarousel() {
   mobSlotEls.forEach((img, slot) => {
     const offset = slot - 2; // -2,-1,0,1,2
     const idx = ((mobIndex + offset) % n + n) % n;
-    img.src = mobImages[idx];
+    img.src = mobBase + mobImages[idx] + '.png';
   });
 }
 renderMobCarousel();
@@ -1262,6 +1312,138 @@ function updateStory() {
 window.addEventListener('scroll', () => { if (!storyTick) { storyTick = true; requestAnimationFrame(updateStory); } }, { passive: true });
 window.addEventListener('resize', () => { storyActive = -1; updateStory(); });
 updateStory();
+
+// ── Language: Hebrew (default) / English ──
+const EN = {
+"nav.how": "How it works",
+"nav.pricing": "Pricing",
+"nav.faq": "FAQ",
+"nav.privacy": "Privacy",
+"nav.download": "Download",
+"aria.menu": "Menu",
+"aria.close": "Close",
+"hero.badge": "Every tool for coping with anxiety, in one place",
+"hero.h1": "<span class=\"word w1\">Your</span> <span class=\"word w2\">way</span><br><span class=\"word w3\">back to</span> <span class=\"word w4 hl-bp\">balance.</span>",
+"hero.sub": "Anxiety attack, stress or panic? Tap <bdi>START</bdi>, and a calm, voice-guided protocol walks you through it step by step, with breathing, muscle release and grounding, until your body settles.",
+"feat1.t": "Mood Journal",
+"feat1.d": "Track how you’re really doing",
+"feat2.t": "Calming protocol",
+"feat2.d": "Voice-guided, step by step",
+"feat3.t": "AI chat",
+"feat3.d": "Support that truly listens",
+"feat4.t": "Support screen",
+"feat4.d": "Your contacts, a calming song, a helpline",
+"store.as": "Download on the",
+"store.gp": "Get it on",
+"hero.note": "7 days of Premium, on us · No credit card · English and Hebrew",
+"story.tag": "How it works",
+"story.h2": "Everything you need in a hard moment,<br>in one place.",
+"story.sub": "Scroll, and the phone flips through the app’s screens.",
+"s1": "\n          <span class=\"ss-num\">01</span>\n          <h3>Anxiety attack? Start here</h3>\n          <p>At work, on the street or in the middle of the night. Tap <bdi>START</bdi>, and a calm voice guides you step by step until your body settles.</p>\n          <ul class=\"ss-list\">\n            <li><strong>A calming protocol</strong> that moves on by itself, one step at a time</li>\n            <li><strong>AI chat, journal and support</strong>, all from the same screen</li>\n            <li><strong>An iPhone widget</strong> that opens breathing right from your home screen</li>\n          </ul>\n          ",
+"s2": "\n          <span class=\"ss-num\">02</span>\n          <h3>Breathe together until your rhythm returns</h3>\n          <p>When your heart races and your breath gets stuck, you don’t have to remember what to do. Follow the circle: breathe in as it grows, out as it shrinks, while the voice counts with you.</p>\n          <ul class=\"ss-list\">\n            <li><strong>4 seconds in, 6 seconds out</strong>, a longer exhale that helps slow your heart rate</li>\n            <li><strong>12 guided cycles</strong>, narrated in English or Hebrew</li>\n          </ul>\n          <span class=\"ss-tag free\">Free</span>\n          ",
+"s3": "\n          <span class=\"ss-num\">03</span>\n          <h3>When your body tenses, teach it to let go</h3>\n          <p>Tight shoulders, clenched hands, restless legs. Press hard for a few seconds, release, and feel the tension leave.</p>\n          <ul class=\"ss-list\">\n            <li><strong>Feet, hands and shoulders</strong>, three short exercises</li>\n            <li><strong>A timer and narration</strong> that tell you exactly when to press and when to release</li>\n          </ul>\n          <span class=\"ss-tag\">Premium</span>\n          ",
+"s4": "\n          <span class=\"ss-num\">04</span>\n          <h3>Choose what helps you</h3>\n          <p>Some days breathing is enough. Other days the thoughts just won’t stop. Pick your own exercise from the menu, and each one explains in a single sentence how it helps.</p>\n          <ul class=\"ss-list\">\n            <li><strong>A range of calming exercises</strong>, for breath, body and mind</li>\n            <li><strong>Always one tap away</strong>, whenever you need them</li>\n            <li><strong>For every moment</strong>, from everyday stress to a full anxiety attack</li>\n          </ul>\n          <span class=\"ss-tag\">Premium</span>\n          ",
+"s5": "\n          <span class=\"ss-num\">05</span>\n          <h3>When you need to talk, someone is listening</h3>\n          <p>In the middle of the night, on the way to work or right before a meeting. Write what you feel and get a calm reply that never judges, sometimes with a breathing exercise right inside the chat.</p>\n          <ul class=\"ss-list\">\n            <li><strong>Safety</strong>: at signs of severe distress, the chat points you straight to ER’AN 1201 and MDA 101</li>\n            <li><strong>Privacy</strong>: your conversations aren’t stored on our servers</li>\n          </ul>\n          <span class=\"ss-tag free\">2 free messages a day</span>\n          ",
+"s6": "\n          <span class=\"ss-num\">06</span>\n          <h3>Good days, hard days, and the pattern emerges</h3>\n          <p>A minute a day: stable, fluctuating or unstable, plus a short note if you like. The color-coded calendar shows your month at a glance, with your streak of stable days and a monthly summary you can export as a PDF and bring to therapy.</p>\n          <span class=\"ss-tag\">Premium</span>\n          ",
+"s7": "\n          <span class=\"ss-num\">07</span>\n          <h3>When it gets hard, everything is ready</h3>\n          <p>Set it up in advance, then tap when it counts, without searching for numbers.</p>\n          <ul class=\"ss-list\">\n            <li><strong>ER’AN 1201</strong>, emotional first aid in Israel, free and one tap away</li>\n            <li><strong>Two emergency contacts</strong> picked from your phone’s contacts</li>\n            <li><strong>A song that calms you</strong>, from <bdi>YouTube</bdi>, <bdi>Spotify</bdi> or <bdi>Apple Music</bdi></li>\n          </ul>\n          ",
+"pr.tag": "Pricing",
+"pr.h2": "Start free. Upgrade when you’re ready.",
+"pr.sub": "Every new install comes with 7 days of Premium, no credit card needed. After that, guided breathing, the ER’AN helpline and 2 AI messages a day stay free.",
+"pr.free": "\n        <h3>Free</h3>\n        <div class=\"price-big\">₪0</div>\n        <ul class=\"price-list\">\n          <li>Guided breathing with narration</li>\n          <li>ER’AN 1201 in one tap</li>\n          <li>2 AI chat messages a day</li>\n        </ul>\n      ",
+"pr.prem": "\n        <span class=\"price-badge\">7 days free</span>\n        <h3>Premium</h3>\n        <div class=\"plans\">\n          <div class=\"plan\"><span class=\"plan-name\">Monthly</span><span class=\"plan-price\">₪29.90</span><span class=\"plan-per\">per month</span></div>\n          <div class=\"plan\"><span class=\"plan-name\">3 Months</span><span class=\"plan-price\">₪69.90</span><span class=\"plan-per\">₪23/mo</span></div>\n          <div class=\"plan best\"><span class=\"plan-flag\">Best value</span><span class=\"plan-name\">Annual</span><span class=\"plan-price\">₪179.90</span><span class=\"plan-per\">₪15/mo</span></div>\n        </div>\n        <ul class=\"price-list\">\n          <li>The full calming protocol and all 6 techniques</li>\n          <li>Unlimited AI chat</li>\n          <li>Mood Journal, monthly summary and PDF export</li>\n          <li>Two emergency contacts and a calming song</li>\n          <li>Calm Space sounds for relief and sleep</li>\n          <li>Cloud backup and sync across devices</li>\n        </ul>\n        <p class=\"price-fine\">Subscriptions renew automatically and can be canceled anytime in your App Store or Google Play subscription settings. Prices are shown in ILS; your store may show local pricing.</p>\n      ",
+"tr.tag": "Privacy",
+"tr.h2": "What happens to your data",
+"tr.sub": "What you go through in hard moments is as personal as it gets. Here’s how we protect it.",
+"tc1.t": "Your conversations stay yours",
+"tc1.d": "Each message is used only to reply to you in that moment. We don’t store your conversations on our servers.",
+"tc2.t": "Your journal is encrypted",
+"tc2.d": "The notes you write are encrypted right on your phone with <bdi>AES-256</bdi>, before they’re backed up to the cloud.",
+"tc3.t": "No sign-up, no details",
+"tc3.d": "Start right away as a guest, with no email and no password. In guest mode, your journal and contacts never leave your phone.",
+"tc4.t": "Your data is not for sale",
+"tc4.d": "We don’t sell data, we don’t share it for marketing, and there are no ads in the app.",
+"tc5.t": "Secure payment through the store",
+"tc5.d": "Subscriptions are purchased directly through <bdi>App Store</bdi> or <bdi>Google Play</bdi>. Your card details stay with them and never reach us.",
+"tc6.t": "You’re in control",
+"tc6.d": "Delete your account in one tap, and everything is erased from our servers: your journal, support settings and the account itself. Logging out also clears your data from the phone.",
+"tr.link": "Read the full privacy policy →",
+"disc.t": "Good to know",
+"disc.d": "Stablue is a self-help tool and does not replace diagnosis, advice, or psychological or psychiatric treatment. In severe distress, it’s important to reach out to a professional.",
+"faq.tag": "Questions",
+"faq.h2": "Frequently asked questions",
+"faq1": "\n        <summary>Does Stablue replace therapy?</summary>\n        <p>No. Stablue is a self-help tool for hard moments, not a substitute for professional diagnosis or treatment. If the distress persists, it’s important to reach out to a professional.</p>\n      ",
+"faq2": "\n        <summary>What do I get for free?</summary>\n        <p>Every new install includes 7 days of full Premium, no credit card required. After that, guided breathing, the ER’AN helpline and 2 AI chat messages a day stay free.</p>\n      ",
+"faq3": "\n        <summary>Do I need to sign up?</summary>\n        <p>No. You can start right away as a guest. Signing in with <bdi>Apple</bdi>, <bdi>Google</bdi> or email adds cloud backup and sync across devices.</p>\n      ",
+"faq4": "\n        <summary>How do I cancel my subscription?</summary>\n        <p>Anytime, in your subscription settings in the App Store on iPhone or Google Play on Android. Premium stays active until the end of the period you’ve paid for.</p>\n      ",
+"faq5": "\n        <summary>Which languages does the app support?</summary>\n        <p>English and Hebrew, including the narration in the exercises. You choose a language the first time you open the app, and you can switch anytime in Settings.</p>\n      ",
+"faq6": "\n        <summary>What happens if I write something worrying to the AI?</summary>\n        <p>If the conversation shows signs of severe distress, the chat locks and shows quick-dial buttons for ER’AN and MDA instead, so you can reach a real person fast.</p>\n      ",
+"cta.tag": "Download",
+"cta.h2": "You don’t have to<br>face it alone.",
+"cta.sub": "7 days of Premium, on us, no credit card. For iPhone and Android, in English and Hebrew.",
+"ft.privacy": "Privacy Policy",
+"ft.terms": "Terms of Use",
+"ft.contact": "Contact",
+"ft.copy": "© 2026 Stablue · All rights reserved · Not a substitute for professional care",
+"alt0": "Stablue home screen",
+"alt1": "Guided breathing exercise",
+"alt2": "Press-and-release exercise",
+"alt3": "Exercise menu",
+"alt4": "AI chat",
+"alt5": "Mood Journal",
+"alt6": "Support screen"
+};
+const META = {"he": {"title": "Stablue: הדרך שלך לחזור לאיזון", "desc": null}, "en": {"title": "Stablue: Your way back to balance", "desc": "An app for anxiety and stress in English and Hebrew: a voice-guided calming protocol, AI chat, a mood journal, a support screen and calming sounds. For iPhone and Android."}};
+const HE = {};
+const i18nEls = [...document.querySelectorAll('[data-i18n]')];
+i18nEls.forEach(el => { if (!(el.dataset.i18n in HE)) HE[el.dataset.i18n] = el.innerHTML; });
+const altEls = [...document.querySelectorAll('[data-i18n-alt]')];
+altEls.forEach(el => { el.dataset.altHe = el.alt; });
+const ariaEls = [...document.querySelectorAll('[data-i18n-aria]')];
+ariaEls.forEach(el => { el.dataset.ariaHe = el.getAttribute('aria-label'); });
+const linkEls = [...document.querySelectorAll('[data-href-en]')];
+linkEls.forEach(el => { el.dataset.hrefHe = el.getAttribute('href'); });
+const shotImgs = [...document.querySelectorAll('img[src^="shots/"]')];
+const metaDesc = document.getElementById('metaDesc');
+META.he.desc = metaDesc.content;
+const langBtn = document.getElementById('langBtn');
+const langBtnLabel = document.getElementById('langBtnLabel');
+let currentLang = 'he';
+
+function setLang(lang, persist) {
+  const en = lang === 'en';
+  currentLang = en ? 'en' : 'he';
+  const root = document.documentElement;
+  root.lang = currentLang; root.dir = en ? 'ltr' : 'rtl';
+  const dict = en ? EN : HE;
+  i18nEls.forEach(el => { const v = dict[el.dataset.i18n]; if (v != null) el.innerHTML = v; });
+  altEls.forEach(el => { el.alt = en ? EN[el.dataset.i18nAlt] : el.dataset.altHe; });
+  ariaEls.forEach(el => el.setAttribute('aria-label', en ? EN[el.dataset.i18nAria] : el.dataset.ariaHe));
+  linkEls.forEach(el => el.setAttribute('href', en ? el.dataset.hrefEn : el.dataset.hrefHe));
+  shotImgs.forEach(img => img.setAttribute('src', img.getAttribute('src').replace(/^shots\/(en\/)?/, en ? 'shots/en/' : 'shots/')));
+  mobBase = en ? 'shots/en/framed/' : 'shots/framed/';
+  renderMobCarousel();
+  document.title = META[currentLang].title;
+  metaDesc.content = META[currentLang].desc;
+  if (persist) requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.hero-h1 .word').forEach(w => w.classList.add('v'))));
+  langBtnLabel.textContent = en ? 'עב' : 'EN';
+  langBtn.setAttribute('aria-label', en ? 'מעבר לעברית' : 'Switch to English');
+  langBtn.title = en ? 'עברית' : 'English';
+  storyActive = -1; updateStory();
+  if (persist) {
+    try { localStorage.setItem('stablue-lang', currentLang); } catch (e) {}
+    try {
+      const u = new URL(location.href);
+      if (en) u.searchParams.set('lang', 'en'); else u.searchParams.delete('lang');
+      history.replaceState(null, '', u);
+    } catch (e) {}
+  }
+}
+langBtn.addEventListener('click', () => setLang(currentLang === 'en' ? 'he' : 'en', true));
+try {
+  if (document.documentElement.lang === 'en') setLang('en', false);
+} finally {
+  document.documentElement.classList.remove('lang-pending');
+}
 
 const io = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
