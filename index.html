@@ -535,7 +535,20 @@
     ══════════════════════════════════ */
     .store-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
     .hero .store-row { justify-content: flex-start; }
-    @media (max-width: 960px) { .hero .store-row { justify-content: center; } }
+    @media (max-width: 960px) {
+      .hero .store-row { justify-content: center; }
+      /* same width for both store buttons (sized to the wider one) */
+      .store-row .store-btn { justify-content: center; min-width: 194px; }
+      .hero .store-row .store-btn { min-width: 162px; }
+    }
+    @media (max-width: 560px) {
+      /* phones: two equal columns side by side, stacked on very narrow screens */
+      .hero .store-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 340px; margin: 0 auto; }
+      .hero .store-row .store-btn { min-width: 0; padding: 10px; gap: 9px; }
+    }
+    @media (max-width: 359px) {
+      .hero .store-row { grid-template-columns: minmax(0, 220px); justify-content: center; }
+    }
     .store-btn {
       display: inline-flex; align-items: center; gap: 12px; direction: ltr;
       padding: 12px 26px 12px 22px; border-radius: 16px; text-decoration: none; color: #fff;
