@@ -9,6 +9,31 @@
   <meta property="og:description" content="פרוטוקול הרגעה מודרך לרגעי חרדה, שיחה עם AI, יומן מעקב ומסך תמיכה. זמינה ב-App Store וב-Google Play." />
   <meta property="og:image" content="https://stablue.app/icon.png" />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://stablue.app/" />
+  <meta property="og:site_name" content="Stablue" />
+  <meta property="og:locale" content="he_IL" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://stablue.app/" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MobileApplication",
+    "name": "Stablue",
+    "alternateName": "Stablue: הקלה בחרדה",
+    "url": "https://stablue.app/",
+    "image": "https://stablue.app/icon.png",
+    "description": "אפליקציה להרגעת התקף חרדה ולחץ: פרוטוקול הרגעה מודרך בקול, תרגילי נשימה והרפיה, שיחה עם AI, יומן מצב רוח ומסך תמיכה. בעברית ובאנגלית.",
+    "operatingSystem": "iOS, Android",
+    "applicationCategory": "HealthApplication",
+    "inLanguage": ["he", "en"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "ILS" },
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5.0", "ratingCount": "9", "bestRating": "5", "worstRating": "1" },
+    "sameAs": [
+      "https://apps.apple.com/il/app/id6771805032",
+      "https://play.google.com/store/apps/details?id=com.stablue.app"
+    ]
+  }
+  </script>
   <script>
     // Apply the saved/linked language before first paint, so English visitors never see a Hebrew flash.
     (function () {
@@ -1606,7 +1631,7 @@ const EN = {
 "alt5": "Mood Journal",
 "alt6": "Support screen"
 };
-const META = {"he": {"title": "Stablue: הדרך שלך לחזור לאיזון", "desc": null}, "en": {"title": "Stablue: Your way back to balance", "desc": "An app for anxiety and stress in English and Hebrew: a voice-guided calming protocol, AI chat, a mood journal, a support screen and calming sounds. For iPhone and Android."}};
+const META = {"he": {"title": null, "desc": null}, "en": {"title": "Stablue: Your way back to balance", "desc": "An app for anxiety and stress in English and Hebrew: a voice-guided calming protocol, AI chat, a mood journal, a support screen and calming sounds. For iPhone and Android."}};
 const HE = {};
 const i18nEls = [...document.querySelectorAll('[data-i18n]')];
 i18nEls.forEach(el => { if (!(el.dataset.i18n in HE)) HE[el.dataset.i18n] = el.innerHTML; });
@@ -1619,6 +1644,7 @@ linkEls.forEach(el => { el.dataset.hrefHe = el.getAttribute('href'); });
 const shotImgs = [...document.querySelectorAll('img[src^="shots/"]')];
 const metaDesc = document.getElementById('metaDesc');
 META.he.desc = metaDesc.content;
+META.he.title = document.title;
 const langBtn = document.getElementById('langBtn');
 const langBtnLabel = document.getElementById('langBtnLabel');
 let currentLang = 'he';
