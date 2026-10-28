@@ -573,6 +573,15 @@
     .hero .store-lg { font-size: 16px; }
 
     .center-head { text-align: center; margin-bottom: 56px; }
+    /* Exercises: two rows of three, the middle column a little higher (as in the store) */
+    .ex-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px 28px;
+      max-width: 700px; margin: 0 auto; direction: ltr;
+    }
+    .ex-grid img { width: 100%; height: auto; display: block; filter: drop-shadow(0 22px 40px rgba(14,30,120,.6)); }
+    .ex-grid img:nth-child(3n+2) { transform: translateY(-5%); }
+    .exgal .sec-h2 { text-wrap: balance; }
+    @media (max-width: 560px) { .ex-grid { gap: 12px 8px; } }
     .center-head .sec-sub { margin: 0 auto; text-align: center; }
 
     /* ══════════════════════════════════
@@ -635,6 +644,20 @@
       width: 31%; height: calc(var(--ph-h) * .04); border-radius: 999px; background: #000;
     }
     .story-dots { display: flex; gap: 8px; direction: ltr; position: relative; z-index: 2; }
+    /* The journal step: the full journal comes out from behind the stats phone,
+       on the side away from the text; both shift so the pair stays centered. */
+    #storyPhone { transition: translate .9s cubic-bezier(.22,.8,.25,1); }
+    .story-phone2 {
+      position: absolute; opacity: 0; pointer-events: none;
+      transform: perspective(1600px) rotateY(-7deg) rotateX(2deg) scale(.88);
+      transition: opacity .6s ease, translate .9s cubic-bezier(.22,.8,.25,1);
+    }
+    .story-phone2 .sp-solo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .story-stage.pair #storyPhone { translate: calc(var(--ph-h) * .11) 0; }
+    .story-stage.pair .story-phone2 { opacity: 1; translate: calc(var(--ph-h) * -.2) 0; }
+    html[dir="ltr"] .story-phone2 { transform: perspective(1600px) rotateY(7deg) rotateX(2deg) scale(.88); }
+    html[dir="ltr"] .story-stage.pair #storyPhone { translate: calc(var(--ph-h) * -.11) 0; }
+    html[dir="ltr"] .story-stage.pair .story-phone2 { translate: calc(var(--ph-h) * .2) 0; }
     .story-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(140,150,255,.25); transition: all .4s; }
     .story-dots i.on { width: 22px; border-radius: 6px; background: linear-gradient(90deg, #38E8CF, #8B6CFF); }
 
@@ -947,6 +970,14 @@
     @media (prefers-reduced-motion: reduce) {
       .sp-page.current, .sweeping .sp-sweep, .story-phone.lift { animation: none; }
     }
+    /* The phone moves with the scroll (see renderPhone): screens crossfade with a
+       little depth instead of the old page turn, and a soft light crosses the glass. */
+    #storyPhone .sp-page { transition: none; animation: none; will-change: opacity, transform; }
+    #storyPhone .sp-sweep {
+      display: block; position: absolute; inset: 0; z-index: 45; pointer-events: none; opacity: 0;
+      background: linear-gradient(100deg, transparent 36%, rgba(190,210,255,.16) 46%, rgba(255,255,255,.26) 50%, rgba(190,210,255,.16) 54%, transparent 64%);
+      background-size: 320% 100%; background-repeat: no-repeat; animation: none;
+    }
   </style>
 </head>
 <body>
@@ -1052,12 +1083,12 @@
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="8" cy="10.5" r=".8" fill="currentColor"/><circle cx="12" cy="10.5" r=".8" fill="currentColor"/><circle cx="16" cy="10.5" r=".8" fill="currentColor"/></svg>
             <strong data-i18n="feat3.t">שיחה עם <bdi>AI</bdi></strong>
-            <span data-i18n="feat3.d">תמיכה חכמה שמבינה</span>
+            <span data-i18n="feat3.d">תמיכה חכמה שמבינה ומציעה תרגילים</span>
           </div>
           <div class="feat-col">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
             <strong data-i18n="feat4.t">מסך תמיכה</strong>
-            <span data-i18n="feat4.d">אנשי קשר, שיר מרגיע וקו ער"ן</span>
+            <span data-i18n="feat4.d">אנשי קשר, שיר מרגיע, מכתב לעצמך וקו ער"ן</span>
           </div>
         </div>
 
@@ -1089,6 +1120,16 @@
     <div class="story-grid">
       <div class="story-stage">
         <div class="story-glow" aria-hidden="true"></div>
+        <!-- The journal step shows two phones: the full journal beside its stats -->
+        <div class="story-phone story-phone2" id="storyPhone2" aria-hidden="true">
+          <div class="sp-btn sp-btn-a"></div>
+          <div class="sp-btn sp-btn-b"></div>
+          <div class="sp-screen">
+            <img class="sp-solo" src="shots/journal-full.jpg" alt="" loading="lazy" />
+            <div class="sp-glare"></div>
+          </div>
+          <div class="sp-island"></div>
+        </div>
         <div class="story-phone" id="storyPhone">
           <div class="sp-btn sp-btn-a" aria-hidden="true"></div>
           <div class="sp-btn sp-btn-b" aria-hidden="true"></div>
@@ -1118,6 +1159,7 @@
           <p>בעבודה, ברחוב או באמצע הלילה. לוחצים על <bdi>START</bdi>, וקול רגוע מוביל אותך צעד אחרי צעד, עד שהגוף נרגע.</p>
           <ul class="ss-list">
             <li><strong>פרוטוקול הרגעה</strong>, שמתקדם לבד משלב לשלב</li>
+            <li><strong>כפתור התרגילים</strong>, עם כל רשימת התרגילים במרחק לחיצה</li>
             <li><strong>שיחה עם <bdi>AI</bdi>, יומן ומסך תמיכה</strong>, הכל מאותו מסך</li>
             <li><strong>ווידג'ט לאייפון</strong>, שפותח את הנשימה ישר ממסך הבית</li>
           </ul>
@@ -1165,7 +1207,7 @@
           <div class="ss-card" data-i18n="s5">
           <span class="ss-num">05</span>
           <h3>כשצריך לדבר, יש מי שמקשיב</h3>
-          <p>באמצע הלילה, בדרך לעבודה או רגע לפני פגישה. כותבים מה מרגישים, ומקבלים תשובה רגועה שלא שופטת, ולפעמים גם הצעה לתרגיל נשימה בתוך השיחה.</p>
+          <p>באמצע הלילה, בדרך לעבודה או רגע לפני פגישה. כותבים מה מרגישים, ומקבלים תשובה רגועה שלא שופטת, ולפעמים גם הצעה לתרגיל שמתאים למצב, בתוך השיחה.</p>
           <ul class="ss-list">
             <li><strong>בטיחות</strong>, כשעולים סימנים למצוקה קשה, השיחה מפנה מיד לער"ן 1201 ולמד"א 101</li>
             <li><strong>פרטיות</strong>, השיחות לא נשמרות בשרת שלנו</li>
@@ -1190,11 +1232,31 @@
             <li><strong>ער"ן 1201</strong>, עזרה נפשית ראשונה, בלחיצה אחת ובחינם</li>
             <li><strong>שני אנשי קשר לחירום</strong> שבוחרים מאנשי הקשר בטלפון</li>
             <li><strong>שיר שמרגיע אותך</strong>, מתוך <bdi>YouTube</bdi>, <bdi>Spotify</bdi> או <bdi>Apple Music</bdi></li>
+            <li><strong>מכתב לעצמך</strong>, שכותבים ברגע רגוע וקוראים ברגע קשה</li>
           </ul>
           </div>
         </article>
 
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXERCISES: a few of the exercises side by side, like the store's last screenshot -->
+<section class="sec exgal" id="exercises">
+  <div class="wrap">
+    <div class="center-head">
+      <span class="sec-tag fi" data-i18n="ex.tag">תרגילים</span>
+      <h2 class="sec-h2 fi" data-i18n="ex.h2">מגוון תרגילים לכל רגע של חרדה</h2>
+      <p class="sec-sub c fi" data-i18n="ex.sub">נשימה, תנועה, חושים ומחשבות. בוחרים מה שמתאים לכם עכשיו, וחוזרים לעצמכם.</p>
+    </div>
+    <div class="ex-grid fi">
+      <img src="shots/ex/leaves.webp" alt="עלים בנהר" data-i18n-alt="exalt1" loading="lazy" />
+      <img src="shots/ex/colors.webp" alt="סריקת צבעים" data-i18n-alt="exalt2" loading="lazy" />
+      <img src="shots/ex/shoulders.webp" alt="הרפיית כתפיים" data-i18n-alt="exalt3" loading="lazy" />
+      <img src="shots/ex/senses.webp" alt="עיגון חושי" data-i18n-alt="exalt4" loading="lazy" />
+      <img src="shots/ex/breath.webp" alt="נשימה מודרכת" data-i18n-alt="exalt5" loading="lazy" />
+      <img src="shots/ex/jump.webp" alt="קפיצה במקום" data-i18n-alt="exalt6" loading="lazy" />
     </div>
   </div>
 </section>
@@ -1239,7 +1301,7 @@
     <div class="center-head">
       <span class="sec-tag fi" data-i18n="pr.tag">מחירים</span>
       <h2 class="sec-h2 fi" data-i18n="pr.h2">מתחילים בחינם. משדרגים כשרוצים.</h2>
-      <p class="sec-sub c fi" data-i18n="pr.sub">בהתקנה מקבלים 7 ימי פרימיום מתנה, בלי כרטיס אשראי. אחריהם, תרגיל הנשימה, ער"ן ושתי הודעות <bdi>AI</bdi> ביום נשארים בחינם.</p>
+      <p class="sec-sub c fi" data-i18n="pr.sub">בהתקנה מקבלים 7 ימי פרימיום מתנה, בלי כרטיס אשראי. אחריהם, תרגיל הנשימה, תרגיל נוסף לבחירה כל יום, ער"ן ושתי הודעות <bdi>AI</bdi> ביום נשארים בחינם.</p>
     </div>
     <div class="price-grid">
       <div class="price-card fi" data-i18n="pr.free">
@@ -1247,6 +1309,8 @@
         <div class="price-big">₪0</div>
         <ul class="price-list">
           <li>תרגיל נשימה מונחה עם קריינות</li>
+          <li>תרגיל נוסף לבחירה, פתוח 24 שעות</li>
+          <li>דיווח יומי ויומן של 5 הימים האחרונים</li>
           <li>ער"ן 1201 בלחיצה אחת</li>
           <li>2 הודעות ביום בשיחה עם <bdi>AI</bdi></li>
         </ul>
@@ -1262,8 +1326,8 @@
         <ul class="price-list">
           <li>פרוטוקול ההרגעה המלא וכל תרגילי ההרגעה</li>
           <li>שיחה עם <bdi>AI</bdi> ללא הגבלה</li>
-          <li>יומן מעקב, סיכום חודשי וייצוא כקובץ PDF</li>
-          <li>שני אנשי קשר לחירום ושיר מרגיע</li>
+          <li>יומן מלא, ציון יציבות חודשי וייצוא כקובץ PDF</li>
+          <li>שני אנשי קשר לחירום, שיר מרגיע ומכתב לעצמך</li>
           <li>מרחב רגיעה עם צלילים להרגעה ולשינה</li>
           <li>גיבוי בענן וסנכרון בין מכשירים</li>
         </ul>
@@ -1358,7 +1422,7 @@
       </details>
       <details class="fi" data-i18n="faq7">
         <summary>מה כלול בחינם, ומה בפרימיום?</summary>
-        <p>כל מי שמוריד מקבל 7 ימי פרימיום מלא במתנה, בלי כרטיס אשראי. גם אחריהם נשארים בחינם, לתמיד: תרגיל הנשימה המודרך, חיוג לער"ן ושתי הודעות ביום לבינה המלאכותית. אם בוחרים במנוי, אפשר לבטל אותו בכל רגע בהגדרות של <bdi>App Store</bdi> או <bdi>Google Play</bdi>.</p>
+        <p>כל מי שמוריד מקבל 7 ימי פרימיום מלא במתנה, בלי כרטיס אשראי. גם אחריהם נשארים בחינם, לתמיד: תרגיל הנשימה המודרך, תרגיל נוסף לבחירה כל יום, דיווח יומי ויומן של 5 הימים האחרונים, חיוג לער"ן ושתי הודעות ביום לבינה המלאכותית. אם בוחרים במנוי, אפשר לבטל אותו בכל רגע בהגדרות של <bdi>App Store</bdi> או <bdi>Google Play</bdi>.</p>
       </details>
     </div>
   </div>
@@ -1507,25 +1571,53 @@ const storyCards = storySteps.map(s => s.querySelector('.ss-card'));
 const storyPages = [...document.querySelectorAll('.sp-page')];
 const storyDots = [...document.querySelectorAll('#storyDots i')];
 const storyPhone = document.getElementById('storyPhone');
+const storyPhone2 = document.getElementById('storyPhone2');
+const storyStage = storyPhone.parentElement;
+const JOURNAL_STEP = 5;
 const storyMQ = window.matchMedia('(max-width: 860px)');
 let storyActive = -1;
-let prevStory = -1;
+// Between steps the phone moves with the scroll itself, the way Apple's product
+// pages do: halfway between two steps it has lifted toward you and swung a
+// little, a soft light crosses its glass, and the next screen rises out of the
+// current one with a touch of depth; as the step settles, so does the phone.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const storyGlow = storyStage.querySelector('.story-glow');
+const storySweep = storyPhone.querySelector('.sp-sweep');
+const tiltFor = (i) => (storyMQ.matches ? 0 : (i % 2 ? 7 : -7));
+const smooth = (x) => { const t = Math.min(1, Math.max(0, x)); return t * t * (3 - 2 * t); };
+function renderPhone(pos) {
+  const k = Math.floor(pos);
+  const t = pos - k;
+  const m = reduceMotion.matches ? 0 : Math.sin(Math.PI * t); // 0 on a step, 1 halfway
+  // Each screen is fully shown around its own step and crossfades in the middle.
+  storyPages.forEach((p, i) => {
+    const d = Math.abs(pos - i);
+    const op = 1 - smooth((d - 0.38) / 0.24);
+    p.style.opacity = op;
+    p.style.transform = reduceMotion.matches ? '' : `scale(${1 + 0.05 * (1 - op)})`;
+  });
+  const tilt = tiltFor(k) + (tiltFor(k + 1) - tiltFor(k)) * smooth(t);
+  const swing = storyMQ.matches ? (k % 2 ? -4 : 4) * m : 0;
+  storyPhone.style.transform =
+    `perspective(1600px) rotateY(${tilt + swing}deg) rotateX(${2 + 2 * m}deg) translateY(${-12 * m}px) scale(${1 + 0.035 * m})`;
+  if (storySweep) {
+    storySweep.style.opacity = m * 0.9;
+    const rtl = document.documentElement.dir !== 'ltr';
+    storySweep.style.backgroundPosition = `${(rtl ? 1 - t : t) * 100}% 0`;
+  }
+  if (storyGlow) storyGlow.style.scale = String(1 + 0.14 * m);
+}
 function setStory(i) {
   if (i === storyActive) return;
   storyActive = i;
   storySteps.forEach((s, k) => s.classList.toggle('active', k === i));
-  storyPages.forEach((p, k) => p.classList.toggle('turned', k < i));
-  storyPages.forEach((p, k) => p.classList.toggle('current', k === i));
-  if (prevStory >= 0 && prevStory !== i) {
-    const scr = storyPhone.querySelector('.sp-screen');
-    storyPhone.classList.remove('lift'); scr.classList.remove('sweeping', 'back');
-    void storyPhone.offsetWidth;
-    storyPhone.classList.add('lift'); scr.classList.add('sweeping');
-    if (i < prevStory) scr.classList.add('back');
-  }
-  prevStory = i;
   storyDots.forEach((d, k) => d.classList.toggle('on', k === i));
-  storyPhone.style.setProperty('--tilt', storyMQ.matches ? '0deg' : (i % 2 ? '7deg' : '-7deg'));
+  storyStage.classList.toggle('pair', i === JOURNAL_STEP);
+}
+// The second phone sits exactly where the first one is laid out (before its shift).
+function placePhone2() {
+  storyPhone2.style.top = storyPhone.offsetTop + 'px';
+  storyPhone2.style.left = storyPhone.offsetLeft + 'px';
 }
 let storyTick = false;
 function updateStory() {
@@ -1539,15 +1631,18 @@ function updateStory() {
   } else {
     storyCards.forEach(c => c.style.removeProperty('--cut'));
   }
-  let best = 0, bestD = Infinity;
-  storyCards.forEach((c, k) => {
-    const r = c.getBoundingClientRect();
-    const d = Math.abs((r.top + r.bottom) / 2 - line);
-    if (d < bestD) { bestD = d; best = k; }
-  });
-  setStory(best);
+  // Where the reading line is between two cards' centers: 2.4 is 40% of the
+  // way from step 3 to step 4.
+  const centers = storyCards.map(c => { const r = c.getBoundingClientRect(); return (r.top + r.bottom) / 2; });
+  let pos = 0;
+  if (line >= centers[centers.length - 1]) pos = centers.length - 1;
+  else for (let k = 0; k < centers.length - 1; k++) {
+    if (line >= centers[k] && line < centers[k + 1]) { pos = k + (line - centers[k]) / (centers[k + 1] - centers[k]); break; }
+  }
+  setStory(Math.round(pos));
+  renderPhone(pos);
 }
-function layoutStory() { storyActive = -1; updateStory(); }
+function layoutStory() { storyActive = -1; placePhone2(); updateStory(); }
 window.addEventListener('scroll', () => { if (!storyTick) { storyTick = true; requestAnimationFrame(updateStory); } }, { passive: true });
 window.addEventListener('resize', layoutStory);
 layoutStory();
@@ -1562,7 +1657,7 @@ const EN = {
 "faq4": "\n        <summary>How is Stablue different from meditation apps?</summary>\n        <p>Meditation apps are built for practice in calm moments. Stablue is built for the moment itself, and brings together everything you need during an anxiety attack: a full calming protocol, AI chat, quick dial to a trusted contact, a calming song, relaxing sounds and more. Not just a breathing exercise.</p>\n      ",
 "faq5": "\n        <summary>Who can see what I write?</summary>\n        <p>What you write stays on your phone, encrypted and secure. Even when you sign in and back up to the cloud, your journal notes are encrypted with <bdi>AES-256</bdi> before they ever leave your phone, and AI conversations are not stored on our servers. We never sell or share your data.</p>\n      ",
 "faq6": "\n        <summary>Can I use it alongside therapy?</summary>\n        <p>Yes, and it doesn’t replace it. You can even export your monthly journal summary as a PDF and bring it to your next session.</p>\n      ",
-"faq7": "\n        <summary>What’s free, and what’s in Premium?</summary>\n        <p>Everyone who downloads gets 7 days of full Premium, no credit card required. After that, guided breathing, the ER’AN helpline and 2 AI messages a day stay free, for good. If you choose a subscription, you can cancel anytime in your <bdi>App Store</bdi> or <bdi>Google Play</bdi> settings.</p>\n      ",
+"faq7": "\n        <summary>What’s free, and what’s in Premium?</summary>\n        <p>Everyone who downloads gets 7 days of full Premium, no credit card required. After that, guided breathing, one more exercise of your choice each day, a daily check-in with a journal of the last 5 days, the ER’AN helpline and 2 AI messages a day stay free, for good. If you choose a subscription, you can cancel anytime in your <bdi>App Store</bdi> or <bdi>Google Play</bdi> settings.</p>\n      ",
 "rv.hint": "Swipe for more reviews",
 "mbar.sub": "7 days of Premium, on us",
 "rv.tag": "What users say",
@@ -1588,27 +1683,27 @@ const EN = {
 "feat2.t": "Calming protocol",
 "feat2.d": "Paced breathing, muscle relaxation, sensory grounding and more",
 "feat3.t": "AI chat",
-"feat3.d": "Support that truly listens",
+"feat3.d": "Support that listens and suggests exercises",
 "feat4.t": "Support screen",
-"feat4.d": "Your contacts, a calming song, a helpline",
+"feat4.d": "Your contacts, a calming song, a note to yourself, a helpline",
 "store.as": "Download on the",
 "store.gp": "Get it on",
 "hero.note": "7 days of Premium, on us · No credit card · English and Hebrew",
 "story.tag": "How it works",
 "story.h2": "Everything you need in a hard moment,<br>in one place.",
 "story.sub": "Scroll, and the phone flips through the app’s screens.",
-"s1": "\n          <span class=\"ss-num\">01</span>\n          <h3>Anxiety attack? Start here</h3>\n          <p>At work, on the street or in the middle of the night. Tap <bdi>START</bdi>, and a calm voice guides you step by step until your body settles.</p>\n          <ul class=\"ss-list\">\n            <li><strong>A calming protocol</strong> that moves on by itself, one step at a time</li>\n            <li><strong>AI chat, journal and support</strong>, all from the same screen</li>\n            <li><strong>An iPhone widget</strong> that opens breathing right from your home screen</li>\n          </ul>\n          ",
+"s1": "\n          <span class=\"ss-num\">01</span>\n          <h3>Anxiety attack? Start here</h3>\n          <p>At work, on the street or in the middle of the night. Tap <bdi>START</bdi>, and a calm voice guides you step by step until your body settles.</p>\n          <ul class=\"ss-list\">\n            <li><strong>A calming protocol</strong> that moves on by itself, one step at a time</li>\n            <li><strong>The exercises button</strong>, with the full list of exercises one tap away</li>\n            <li><strong>AI chat, journal and support</strong>, all from the same screen</li>\n            <li><strong>An iPhone widget</strong> that opens breathing right from your home screen</li>\n          </ul>\n          ",
 "s2": "\n          <span class=\"ss-num\">02</span>\n          <h3>Breathe together until your rhythm returns</h3>\n          <p>When your heart races and your breath gets stuck, you don’t have to remember what to do. Follow the circle: breathe in as it grows, out as it shrinks, while the voice counts with you.</p>\n          <ul class=\"ss-list\">\n            <li><strong>4 seconds in, 6 seconds out</strong>, a longer exhale that helps slow your heart rate</li>\n            <li><strong>12 guided cycles</strong>, narrated in English or Hebrew</li>\n          </ul>\n          ",
 "s3": "\n          <span class=\"ss-num\">03</span>\n          <h3>When your body tenses, teach it to let go</h3>\n          <p>Tight shoulders, clenched hands, restless legs. Press hard for a few seconds, release, and feel the tension leave.</p>\n          <ul class=\"ss-list\">\n            <li><strong>Feet, hands and shoulders</strong>, three short exercises</li>\n            <li><strong>A timer and narration</strong> that tell you exactly when to press and when to release</li>\n          </ul>\n          ",
 "s4": "\n          <span class=\"ss-num\">04</span>\n          <h3>Choose what helps you</h3>\n          <p>Some days breathing is enough. Other days the thoughts just won’t stop. Pick your own exercise from the menu, and each one explains in a single sentence how it helps.</p>\n          <ul class=\"ss-list\">\n            <li><strong>A range of calming exercises</strong>, for breath, body and mind</li>\n            <li><strong>Always one tap away</strong>, whenever you need them</li>\n            <li><strong>For every moment</strong>, from everyday stress to a full anxiety attack</li>\n          </ul>\n          ",
-"s5": "\n          <span class=\"ss-num\">05</span>\n          <h3>When you need to talk, someone is listening</h3>\n          <p>In the middle of the night, on the way to work or right before a meeting. Write what you feel and get a calm reply that never judges, sometimes with a breathing exercise right inside the chat.</p>\n          <ul class=\"ss-list\">\n            <li><strong>Safety</strong>: at signs of severe distress, the chat points you straight to ER’AN 1201 and MDA 101</li>\n            <li><strong>Privacy</strong>: your conversations aren’t stored on our servers</li>\n          </ul>\n          ",
+"s5": "\n          <span class=\"ss-num\">05</span>\n          <h3>When you need to talk, someone is listening</h3>\n          <p>In the middle of the night, on the way to work or right before a meeting. Write what you feel and get a calm reply that never judges, sometimes with an exercise that fits the moment, right inside the chat.</p>\n          <ul class=\"ss-list\">\n            <li><strong>Safety</strong>: at signs of severe distress, the chat points you straight to ER’AN 1201 and MDA 101</li>\n            <li><strong>Privacy</strong>: your conversations aren’t stored on our servers</li>\n          </ul>\n          ",
 "s6": "\n          <span class=\"ss-num\">06</span>\n          <h3>Good days, hard days, and the pattern emerges</h3>\n          <p>A minute a day: stable, fluctuating or unstable, plus a short note if you like. The color-coded calendar shows your month at a glance, with your streak of stable days and a monthly summary you can export as a PDF and bring to therapy.</p>\n          ",
-"s7": "\n          <span class=\"ss-num\">07</span>\n          <h3>When it gets hard, everything is ready</h3>\n          <p>Set it up in advance, then tap when it counts, without searching for numbers.</p>\n          <ul class=\"ss-list\">\n            <li><strong>ER’AN 1201</strong>, emotional first aid in Israel, free and one tap away</li>\n            <li><strong>Two emergency contacts</strong> picked from your phone’s contacts</li>\n            <li><strong>A song that calms you</strong>, from <bdi>YouTube</bdi>, <bdi>Spotify</bdi> or <bdi>Apple Music</bdi></li>\n          </ul>\n          ",
+"s7": "\n          <span class=\"ss-num\">07</span>\n          <h3>When it gets hard, everything is ready</h3>\n          <p>Set it up in advance, then tap when it counts, without searching for numbers.</p>\n          <ul class=\"ss-list\">\n            <li><strong>ER’AN 1201</strong>, emotional first aid in Israel, free and one tap away</li>\n            <li><strong>Two emergency contacts</strong> picked from your phone’s contacts</li>\n            <li><strong>A song that calms you</strong>, from <bdi>YouTube</bdi>, <bdi>Spotify</bdi> or <bdi>Apple Music</bdi></li>\n            <li><strong>A note to yourself</strong>, written in a calm moment to read in a hard one</li>\n          </ul>\n          ",
 "pr.tag": "Pricing",
 "pr.h2": "Start free. Upgrade when you’re ready.",
-"pr.sub": "Every new install comes with 7 days of Premium, no credit card needed. After that, guided breathing, the ER’AN helpline and 2 AI messages a day stay free.",
-"pr.free": "\n        <h3>Free</h3>\n        <div class=\"price-big\">₪0</div>\n        <ul class=\"price-list\">\n          <li>Guided breathing with narration</li>\n          <li>ER’AN 1201 in one tap</li>\n          <li>2 AI chat messages a day</li>\n        </ul>\n      ",
-"pr.prem": "\n        <span class=\"price-badge\">7 days free</span>\n        <h3>Premium</h3>\n        <div class=\"plans\">\n          <div class=\"plan\"><span class=\"plan-name\">Monthly</span><span class=\"plan-price\">₪29.90</span><span class=\"plan-per\">per month</span></div>\n          <div class=\"plan\"><span class=\"plan-name\">3 Months</span><span class=\"plan-price\">₪69.90</span><span class=\"plan-per\">₪23/mo</span></div>\n          <div class=\"plan best\"><span class=\"plan-flag\">Best value</span><span class=\"plan-name\">Annual</span><span class=\"plan-price\">₪179.90</span><span class=\"plan-per\">₪15/mo</span></div>\n        </div>\n        <ul class=\"price-list\">\n          <li>The full calming protocol and every calming exercise</li>\n          <li>Unlimited AI chat</li>\n          <li>Mood Journal, monthly summary and PDF export</li>\n          <li>Two emergency contacts and a calming song</li>\n          <li>Calm Space sounds for relief and sleep</li>\n          <li>Cloud backup and sync across devices</li>\n        </ul>\n        <p class=\"price-fine\">Subscriptions renew automatically and can be canceled anytime in your App Store or Google Play subscription settings. Prices are shown in ILS; your store may show local pricing.</p>\n      ",
+"pr.sub": "Every new install comes with 7 days of Premium, no credit card needed. After that, guided breathing, one more exercise of your choice each day, the ER’AN helpline and 2 AI messages a day stay free.",
+"pr.free": "\n        <h3>Free</h3>\n        <div class=\"price-big\">₪0</div>\n        <ul class=\"price-list\">\n          <li>Guided breathing with narration</li>\n          <li>One more exercise of your choice, open for 24 hours</li>\n          <li>Daily check-in and a journal of the last 5 days</li>\n          <li>ER’AN 1201 in one tap</li>\n          <li>2 AI chat messages a day</li>\n        </ul>\n      ",
+"pr.prem": "\n        <span class=\"price-badge\">7 days free</span>\n        <h3>Premium</h3>\n        <div class=\"plans\">\n          <div class=\"plan\"><span class=\"plan-name\">Monthly</span><span class=\"plan-price\">₪29.90</span><span class=\"plan-per\">per month</span></div>\n          <div class=\"plan\"><span class=\"plan-name\">3 Months</span><span class=\"plan-price\">₪69.90</span><span class=\"plan-per\">₪23/mo</span></div>\n          <div class=\"plan best\"><span class=\"plan-flag\">Best value</span><span class=\"plan-name\">Annual</span><span class=\"plan-price\">₪179.90</span><span class=\"plan-per\">₪15/mo</span></div>\n        </div>\n        <ul class=\"price-list\">\n          <li>The full calming protocol and every calming exercise</li>\n          <li>Unlimited AI chat</li>\n          <li>The full journal, a monthly stability score and PDF export</li>\n          <li>Two emergency contacts, a calming song and a note to yourself</li>\n          <li>Calm Space sounds for relief and sleep</li>\n          <li>Cloud backup and sync across devices</li>\n        </ul>\n        <p class=\"price-fine\">Subscriptions renew automatically and can be canceled anytime in your App Store or Google Play subscription settings. Prices are shown in ILS; your store may show local pricing.</p>\n      ",
 "tr.tag": "Privacy",
 "tr.h2": "What happens to your data",
 "tr.sub": "What you go through in hard moments is as personal as it gets. Here’s how we protect it.",
@@ -1642,7 +1737,16 @@ const EN = {
 "alt3": "Exercise menu",
 "alt4": "AI chat",
 "alt5": "Mood Journal",
-"alt6": "Support screen"
+"alt6": "Support screen",
+"ex.tag": "Exercises",
+"ex.h2": "Exercises for every anxious moment",
+"ex.sub": "Breathing, movement, senses and thoughts. Choose what fits you now, and come back to yourself.",
+"exalt1": "Leaves on a stream",
+"exalt2": "Finding colors",
+"exalt3": "Shoulder release",
+"exalt4": "Sensory grounding",
+"exalt5": "Guided breathing",
+"exalt6": "Jump in place"
 };
 const META = {"he": {"title": null, "desc": null}, "en": {"title": "Stablue: Your way back to balance", "desc": "An app for anxiety and stress in English and Hebrew: a voice-guided calming protocol, AI chat, a mood journal, a support screen and calming sounds. For iPhone and Android."}};
 const HE = {};
