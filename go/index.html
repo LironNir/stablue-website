@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Stablue</title>
+  <link rel="icon" href="/icon.png" />
+  <!--
+    A partner's link: stablue.app/go/?p=<source>[&c=<campaign>][&k=<content>]
+    Sends the phone straight to its store, carrying the partner's tag:
+    - Android: Google Play's install referrer (utm_source / utm_campaign /
+      utm_content). The app reads it on first launch (src/lib/installSource.ts
+      in the app repo) and puts it on the subscription, so every purchase and
+      renewal is counted for that source.
+    - iPhone: Apple's own campaign link (pt = our provider token, ct = the
+      source). Apple counts downloads, subscriptions and sales per campaign in
+      App Store Connect > Analytics > Campaigns.
+    - Anything else (a computer): both store buttons, with the same tags.
+    No cookies, no analytics, nothing sent anywhere but the store.
+  -->
+  <style>
+    :root {
+      --bg: #080C2C; --blue: #2448D8; --text: #FFFFFF;
+      --muted: rgba(208,215,255,.84); --bdr: rgba(60,90,220,.32);
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 32px 16px; color: var(--text); text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Heebo, sans-serif;
+      background: linear-gradient(170deg, #120838 0%, #0A0C38 42%, #070C30 74%, #050D28 100%) fixed, var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    main { width: 100%; max-width: 360px; }
+    img { width: 84px; height: 84px; border-radius: 22px; margin-bottom: 18px; }
+    h1 { font-size: 26px; font-weight: 700; letter-spacing: .5px; }
+    p { margin: 10px 0 28px; color: var(--muted); font-size: 16px; line-height: 1.5; }
+    a.store {
+      display: block; padding: 15px 18px; margin-top: 12px; border-radius: 14px;
+      color: var(--text); text-decoration: none; font-size: 16px; font-weight: 600;
+      background: rgba(14,18,60,.78); border: 1px solid var(--bdr);
+    }
+    a.store.primary { background: var(--blue); border-color: var(--blue); }
+    a.store[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="/icon.png" alt="" />
+    <h1>Stablue</h1>
+    <p id="msg">Your way back to balance</p>
+    <a class="store" id="ios" href="https://apps.apple.com/app/id6771805032">Download on the App Store</a>
+    <a class="store" id="android" href="https://play.google.com/store/apps/details?id=com.stablue.app">Get it on Google Play</a>
+  </main>
+  <script>
+    (function () {
+      var APP_STORE_ID = '6771805032';
+      var PLAY_ID = 'com.stablue.app';
+      // Apple's provider token for our team, from App Store Connect's campaign
+      // link generator (the pt= value). Without it iPhone links still work,
+      // Apple just can't count them.
+      var APPLE_PROVIDER_TOKEN = '128860063';
+
+      // Same rule as the app: letters, digits, '-', '_' and '.', at most 64.
+      function tag(v) {
+        v = (v || '').trim().slice(0, 64);
+        return /^[\w.-]+$/.test(v) ? v : null;
+      }
+      var q = new URLSearchParams(location.search);
+      var source = tag(q.get('p'));
+      var campaign = tag(q.get('c'));
+      var content = tag(q.get('k'));
+
+      var play = 'https://play.google.com/store/apps/details?id=' + PLAY_ID;
+      var apple = 'https://apps.apple.com/app/apple-store/id' + APP_STORE_ID;
+      if (source) {
+        var referrer = 'utm_source=' + source + '&utm_medium=partner' +
+          (campaign ? '&utm_campaign=' + campaign : '') +
+          (content ? '&utm_content=' + content : '');
+        play += '&referrer=' + encodeURIComponent(referrer);
+        if (APPLE_PROVIDER_TOKEN) {
+          // Apple's campaign name is at most 30 characters.
+          var ct = [source, campaign, content].filter(Boolean).join('-').slice(0, 30);
+          apple += '?pt=' + APPLE_PROVIDER_TOKEN + '&ct=' + encodeURIComponent(ct) + '&mt=8';
+        }
+      }
+
+      var he = /^he\b/i.test(navigator.language || '');
+      if (he) {
+        document.documentElement.lang = 'he';
+        document.documentElement.dir = 'rtl';
+        document.getElementById('msg').textContent = 'הדרך שלך לחזור לאיזון';
+        document.getElementById('ios').textContent = 'להורדה ב־App Store';
+        document.getElementById('android').textContent = 'להורדה ב־Google Play';
+      }
+
+      var ios = document.getElementById('ios');
+      var android = document.getElementById('android');
+      ios.href = apple;
+      android.href = play;
+
+      var ua = navigator.userAgent || '';
+      var isAndroid = /Android/i.test(ua);
+      // iPadOS reports itself as a Mac; a touch screen gives it away.
+      var isApple = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+
+      if (isAndroid) {
+        ios.hidden = true;
+        android.className += ' primary';
+        location.replace(play);
+      } else if (isApple) {
+        android.hidden = true;
+        ios.className += ' primary';
+        location.replace(apple);
+      }
+      // A computer: both buttons stay, already carrying the tags.
+    })();
+  </script>
+</body>
+</html>
